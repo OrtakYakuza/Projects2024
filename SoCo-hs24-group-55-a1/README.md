@@ -1,5 +1,5 @@
 07.10.24 - started working on assignment together!
-
+-> started with setting up our repository and adding the required folders/files + adding members
 07.10.24 First ChatGPT Prompt: How to create a Folder in GitLab
 07.10.24 ChatGPT: Merge conflicts and how to solve them per terminal
 07.10.24 Started working on Step1 by splitting up the classes between ourselves 
