@@ -5,7 +5,7 @@ import math
 def calculate_cost(thing):
     raise NotImplementedError("Method has not been Implemented")
 
-def duration_in_days(thing):
+def describe_package(thing):
     raise NotImplementedError("Method has not been Implemented")
 
 # parent class
@@ -15,10 +15,11 @@ VacationPackage = {
     "cost_per_day" : None,
     "duration_in_days" : None,
     "calculate_cost" : calculate_cost,
-    "duration_in_days" : duration_in_days,
+    "describe_package" : describe_package,
     "_classname" : "VacationPackage",
     "_parent": None,
 }
+
 # AdventureTrip
 
 def adventure_trip_calculate_cost(thing):
@@ -36,3 +37,24 @@ AdventureTrip = {
     "_classname" : "AdventureTrip",
     "_parent" : VacationPackage,
 }
+#Luxury Cruise
+
+def cruise_calculate_cost(thing):
+    if thing["has_private_suite"] == True:
+        return ((thing["cost_per_day"] * thing["duration_in_days"]) *1.5)
+    return thing["cost_per_day"] * thing["duration_in_days"]
+
+def cruise_describe_package(thing):
+    if thing["has_private_suite"] == True:
+        return f"The {thing['duration_in_days']} day long Luxury Cruise vacation in {thing['destination']} includes a private Suite."
+    return f"The {thing['duration_in_days']} day long Luxury Cruise vacation in {thing['destination']} does not include a private Suite."  
+
+                  
+LuxuryCruise = {
+    "has_private_suite": None,
+    "calculate_cost" : cruise_calculate_cost,
+    "describe_package" : cruise_describe_package,
+    "_classname":"LuxuryCruise",
+    "_parent":VacationPackage
+}
+
