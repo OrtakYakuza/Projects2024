@@ -10,7 +10,7 @@ def beach_resort_describe_package(thing):
 
                   
 Beach_Resort = {
-    "includes_surfing": None,
+    "includes_surfing": False,
     "calculate cost" : beach_resort_calculate_cost,
     "describe package" : beach_resort_describe_package,
     "_classname":"BeachResort",
