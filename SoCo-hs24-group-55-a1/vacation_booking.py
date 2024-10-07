@@ -50,11 +50,11 @@ def cruise_describe_package(thing):
     return f"The {thing['duration_in_days']} day long Luxury Cruise vacation in {thing['destination']} does not include a private Suite."  
 
                   
-Luxury_Cruise = {
+LuxuryCruise = {
     "has_private_suite": None,
     "calculate_cost" : cruise_calculate_cost,
     "describe_package" : cruise_describe_package,
-    "_classname":"Luxury_Cruise",
+    "_classname":"LuxuryCruise",
     "_parent":VacationPackage
 }
 
