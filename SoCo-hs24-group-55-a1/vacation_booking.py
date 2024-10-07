@@ -26,7 +26,14 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
     if package == BeachResort:
         pass
     elif package == AdventureTrip:
-        pass
+        difficulty_level = args[0]
+        new_thing = {
+            "destination" : destination,
+            "cost_per_day" : cost_per_day,
+            "duration_in_days" : duration_in_days,
+            "difficulty_level" : difficulty_level,
+            "_class" : AdventureTrip}
+        return new_thing
     elif package == LuxuryCruise:
         pass
     else:
