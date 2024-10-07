@@ -22,7 +22,7 @@ VacationPackage = {
 
 def calculate_cost(thing):
     if thing["includes_surfing"] == True:
-        return BeachResort["cost_per_day"] * thing["duration_in_days"] + 100
+        return thing["cost_per_day"] * thing["duration_in_days"] + 100
     return thing["cost_per_day"] * thing["duration_in_days"]
 
 def describe_package(thing):
