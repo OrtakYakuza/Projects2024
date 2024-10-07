@@ -1,7 +1,3 @@
-import math
-
-# abstract methods of the parent class
-
 def calculate_cost(thing):
     raise NotImplementedError("Method has not been Implemented")
 
@@ -18,6 +14,26 @@ VacationPackage = {
     "describe_package" : describe_package,
     "_classname" : "VacationPackage",
     "_parent": None,
+}
+
+#BeachResort
+
+def beach_resort_calculate_cost(thing):
+    if thing["includes_surfing"] == True:
+        return thing["cost_per_day"] * thing["duration_in_days"] + 100
+    return thing["cost_per_day"] * thing["duration_in_days"]
+
+def beach_resort_describe_package(thing):
+    if thing["includes_surfing"] == True:
+        return f"The {thing['duration_in_days']} day long Beach Resort vacation in {thing['destination']} includes surfing."
+    return f"The {thing['duration_in_days']} day long Beach Resort vacation in {thing['destination']} does not include surfing."  
+                 
+Beach_Resort = {
+    "includes_surfing": False,
+    "calculate cost" : beach_resort_calculate_cost,
+    "describe package" : beach_resort_describe_package,
+    "_classname":"BeachResort",
+    "_parent":VacationPackage
 }
 
 # AdventureTrip
@@ -58,3 +74,4 @@ LuxuryCruise = {
     "_parent":VacationPackage
 }
 
+>>>>>>> SoCo-hs24-group-55-a1/vacation_booking.py
