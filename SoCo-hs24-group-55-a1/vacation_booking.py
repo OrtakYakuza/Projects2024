@@ -14,8 +14,8 @@ VacationPackage = {
     "destination" : None,
     "cost_per_day" : None,
     "duration_in_days" : None,
-    "calculate_cost" : calculate_cost(),
-    "duration_in_days" : duration_in_days(),
+    "calculate_cost" : calculate_cost,
+    "duration_in_days" : duration_in_days,
     "_classname" : "VacationPackage",
     "_parent": None,
 }
