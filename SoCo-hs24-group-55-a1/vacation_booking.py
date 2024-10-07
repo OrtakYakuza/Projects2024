@@ -20,9 +20,6 @@ VacationPackage = {
     "_parent": None,
 }
 
-import math
-
-
 def calculate_cost(thing):
     raise NotImplementedError("Method has not been Implemented")
 
