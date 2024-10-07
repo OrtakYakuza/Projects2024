@@ -5,7 +5,7 @@ import math
 def calculate_cost(thing):
     raise NotImplementedError("Method has not been Implemented")
 
-def duration_in_days(thing):
+def describe_package(thing):
     raise NotImplementedError("Method has not been Implemented")
 
 # parent class
