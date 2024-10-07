@@ -19,3 +19,15 @@ VacationPackage = {
     "_classname" : "VacationPackage",
     "_parent": None,
 }
+
+# make function
+
+def make(package, destination, cost_per_day, duration_in_days, *args):
+    if package == BeachResort:
+        pass
+    elif package == AdventureTrip:
+        pass
+    elif package == LuxuryCruise:
+        pass
+    else:
+        raise ValueError("Package is nonexistent")
