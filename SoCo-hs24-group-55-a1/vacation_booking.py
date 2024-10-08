@@ -4,7 +4,7 @@ def calculate_cost(thing):
 def describe_package(thing):
     raise NotImplementedError("Method has not been Implemented")
 
-# parent class
+#Parent Class
 
 VacationPackage = {
     "destination" : None,
@@ -36,7 +36,7 @@ Beach_Resort = {
     "_parent":VacationPackage
 }
 
-# AdventureTrip
+#AdventureTrip
 
 def adventure_trip_calculate_cost(thing):
     if thing["difficulty_level"] == "hard":
@@ -54,14 +54,14 @@ AdventureTrip = {
     "_parent" : VacationPackage,
 }
 
-#Luxury Cruise
+#LuxuryCruise
 
-def cruise_calculate_cost(thing):
+def luxury_cruise_calculate_cost(thing):
     if thing["has_private_suite"] == True:
         return ((thing["cost_per_day"] * thing["duration_in_days"]) *1.5)
     return thing["cost_per_day"] * thing["duration_in_days"]
 
-def cruise_describe_package(thing):
+def luxury_cruise_describe_package(thing):
     if thing["has_private_suite"] == True:
         return f"The {thing['duration_in_days']} day long Luxury Cruise vacation in {thing['destination']} includes a private Suite."
     return f"The {thing['duration_in_days']} day long Luxury Cruise vacation in {thing['destination']} does not include a private Suite."  
@@ -75,8 +75,8 @@ LuxuryCruise = {
     "_parent":VacationPackage
 }
 
-beach resort = make(BeachResort, "Maldives", 100, 7, True)
-adventure trip = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy")
-luxury cruise = make(LuxuryCruise, "Mediterranean", 100, 14, False)
+beach_resort = make(BeachResort, "Maldives", 100, 7, True)
+adventure_trip = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy")
+luxury_cruise = make(LuxuryCruise, "Mediterranean", 100, 14, False)
 
 >>>>>>> SoCo-hs24-group-55-a1/vacation_booking.py
