@@ -69,8 +69,8 @@ def luxury_cruise_describe_package(thing):
                   
 LuxuryCruise = {
     "has_private_suite": None,
-    "calculate_cost" : cruise_calculate_cost,
-    "describe_package" : cruise_describe_package,
+    "calculate_cost" : luxury_cruise_calculate_cost,
+    "describe_package" : luxury_cruise_describe_package,
     "_classname":"LuxuryCruise",
     "_parent":VacationPackage
 }
