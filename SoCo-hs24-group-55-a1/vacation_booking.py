@@ -107,6 +107,8 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
     else:
         raise ValueError("Package is nonexistent")
 
+# Test Calls
+
 beach_resort = make(BeachResort, "Maldives", 100, 7, True)
 adventure_trip = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy")
 luxury_cruise = make(LuxuryCruise, "Mediterranean", 100, 14, False)
