@@ -1,3 +1,7 @@
+import math
+
+#Abstract Methods
+
 def calculate_cost(thing):
     raise NotImplementedError("Method has not been Implemented")
 
