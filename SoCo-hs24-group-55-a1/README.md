@@ -1,6 +1,6 @@
 07.10.24 - first day of working on assignment together!
 
-started with setting up our repository  and adding the required folders/files + adding members
+started with setting up our repository and adding the required folders/files + adding members
 encountered some difficulties adding a folder which led to our first ChatGPT Prompt: How to create a Folder in GitLab
 looked at branches and commits/merging together so that everyone is on the same page, here we encountered difficulties with merging conflicts -> ChatGPT Prompt: Merge conflicts and how to solve them per terminal
 
@@ -13,3 +13,4 @@ tentatively finished our classes and merged them into the main branch + created 
 made some minor corrections to our main class
 merged the make_function with the main class
 added missing functions to the make_function
+added some test calls to see if the code works
