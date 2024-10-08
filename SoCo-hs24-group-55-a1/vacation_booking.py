@@ -25,7 +25,7 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
             "destination" : destination,
             "cost_per_day" : cost_per_day,
             "duration_in_days" : duration_in_days,
-             "has_private_suite" : has_private_suite,,
+            "has_private_suite" : has_private_suite,
             "_class" : LuxuryCruise}
         return new_thing
     else:
