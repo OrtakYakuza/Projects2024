@@ -53,6 +53,7 @@ AdventureTrip = {
     "_classname" : "AdventureTrip",
     "_parent" : VacationPackage,
 }
+
 #Luxury Cruise
 
 def cruise_calculate_cost(thing):
@@ -73,5 +74,9 @@ LuxuryCruise = {
     "_classname":"LuxuryCruise",
     "_parent":VacationPackage
 }
+
+beach resort = make(BeachResort, "Maldives", 100, 7, True)
+adventure trip = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy")
+luxury cruise = make(LuxuryCruise, "Mediterranean", 100, 14, False)
 
 >>>>>>> SoCo-hs24-group-55-a1/vacation_booking.py
