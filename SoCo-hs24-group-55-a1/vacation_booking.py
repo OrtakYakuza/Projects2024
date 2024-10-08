@@ -32,7 +32,7 @@ def beach_resort_describe_package(thing):
         return f"The {thing['duration_in_days']} day long Beach Resort vacation in {thing['destination']} includes surfing."
     return f"The {thing['duration_in_days']} day long Beach Resort vacation in {thing['destination']} does not include surfing."  
                  
-Beach_Resort = {
+BeachResort = {
     "includes_surfing": False,
     "calculate_cost" : beach_resort_calculate_cost,
     "describe_package" : beach_resort_describe_package,
