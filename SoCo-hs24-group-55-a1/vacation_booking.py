@@ -162,6 +162,15 @@ VacationBookingSummary["search_term"] = "luxury"
 
 print(calculate_total_cost())
 print(extract_total_vacation_summary())       
+
+def make_vacation_booking_summary(search_term=None):
+    return {
+        "search_term": search_term,
+        "calculate_total_cost": calculate_total_cost,
+        "extract_total_vacation_summary": extract_total_vacation_summary
+    }
+
+test= make_vacation_booking_summary("cruise")
     
 
 
