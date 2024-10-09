@@ -19,3 +19,5 @@ added some test calls to see if the code works
 
 removed the prior added functions from mkae_function as we realized our other method was not ideal
 made a find/call function as this is a better way 
+
+Since we implented the find and call function, we implemented the calculate total cost and the extract total vacation summary, by creating a list (booked_holidays) and iterating over it using the call function to call calculate_cost and describe_package functions and appending them to a new list, which is summed for the cost and returned in the summary function.
