@@ -14,3 +14,8 @@ made some minor corrections to our main class
 merged the make_function with the main class
 added missing functions to the make_function
 added some test calls to see if the code works
+
+09.10.24
+
+removed the prior added functions from mkae_function as we realized our other method was not ideal
+made a find/call function as this is a better way 
