@@ -78,6 +78,19 @@ LuxuryCruise = {
     "_parent":VacationPackage
 }
 
+#find/call function
+
+def call(thing, key_name, *args):
+    method = find(thing["_class"], key_name)
+    return method(thing, *args)
+
+def find(cls, key_name):
+    if key_name in cls:
+        return cls[key_name]
+    if cls["_parent"]:
+        return find(cls["_parent"], key_name)
+    raise NotImplementedError("Missing method " + key_name)
+
 # make function
 
 def make(package, destination, cost_per_day, duration_in_days, *args):
@@ -88,8 +101,6 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
             "cost_per_day" : cost_per_day,
             "duration_in_days" : duration_in_days,
             "includes_surfing" : includes_surfing,
-            "calculate_cost" : beach_resort_calculate_cost,
-            "describe_package" : beach_resort_describe_package,
             "_class" : BeachResort}
         return new_thing
     elif package == AdventureTrip:
@@ -99,8 +110,6 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
             "cost_per_day" : cost_per_day,
             "duration_in_days" : duration_in_days,
             "difficulty_level" : difficulty_level,
-            "calculate_cost" : adventure_trip_calculate_cost,
-            "describe_package" : adventure_trip_describe_package,
             "_class" : AdventureTrip}
         return new_thing
     elif package == LuxuryCruise:
@@ -110,8 +119,6 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
             "cost_per_day" : cost_per_day,
             "duration_in_days" : duration_in_days,
             "has_private_suite" : has_private_suite,
-            "calculate_cost" : luxury_cruise_calculate_cost,
-            "describe_package" : luxury_cruise_describe_package,
             "_class" : LuxuryCruise}
         return new_thing
     else:
