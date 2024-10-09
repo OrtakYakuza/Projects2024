@@ -126,7 +126,7 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
         raise ValueError("Package is nonexistent")
 
 beach_resort1 = make(BeachResort, "Maldives", 100, 7, True)
-adventure_trip1 = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy").   #these are in the Booked_holidays List
+adventure_trip1 = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy")   #these are in the Booked_holidays List
 luxury_cruise1 = make(LuxuryCruise, "Mediterranean", 100, 14, True)
 
 def calculate_total_cost():
