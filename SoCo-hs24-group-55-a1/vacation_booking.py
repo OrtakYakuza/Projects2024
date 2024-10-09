@@ -1,7 +1,3 @@
-import math
-
-#Abstract Methods
-
 def calculate_cost(thing):
     raise NotImplementedError("Method has not been Implemented")
 
@@ -69,7 +65,8 @@ def luxury_cruise_describe_package(thing):
     if thing["has_private_suite"] == True:
         return f"The {thing['duration_in_days']} day long Luxury Cruise vacation in {thing['destination']} includes a private Suite."
     return f"The {thing['duration_in_days']} day long Luxury Cruise vacation in {thing['destination']} does not include a private Suite."  
-         
+
+                  
 LuxuryCruise = {
     "has_private_suite": None,
     "calculate_cost" : luxury_cruise_calculate_cost,
@@ -91,7 +88,13 @@ def find(cls, key_name):
         return find(cls["_parent"], key_name)
     raise NotImplementedError("Missing method " + key_name)
 
+
+
+
+#>>>>>>> SoCo-hs24-group-55-a1/vacation_booking.py
+
 # make function
+Booked_Holidays = []
 
 def make(package, destination, cost_per_day, duration_in_days, *args):
     if package == BeachResort:
@@ -102,6 +105,7 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
             "duration_in_days" : duration_in_days,
             "includes_surfing" : includes_surfing,
             "_class" : BeachResort}
+        Booked_Holidays.append(new_thing)
         return new_thing
     elif package == AdventureTrip:
         difficulty_level = args[0]
@@ -111,6 +115,7 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
             "duration_in_days" : duration_in_days,
             "difficulty_level" : difficulty_level,
             "_class" : AdventureTrip}
+        Booked_Holidays.append(new_thing)
         return new_thing
     elif package == LuxuryCruise:
         has_private_suite = args[0]
@@ -120,14 +125,39 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
             "duration_in_days" : duration_in_days,
             "has_private_suite" : has_private_suite,
             "_class" : LuxuryCruise}
+        Booked_Holidays.append(new_thing)
         return new_thing
     else:
         raise ValueError("Package is nonexistent")
 
-# Test Calls
+beach_resort1 = make(BeachResort, "Maldives", 100, 7, True)
+adventure_trip1 = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy").   #these are in the Booked_holidays List
+luxury_cruise1 = make(LuxuryCruise, "Mediterranean", 100, 14, True)
 
-beach_resort = make(BeachResort, "Maldives", 100, 7, True)
-adventure_trip = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy")
-luxury_cruise = make(LuxuryCruise, "Mediterranean", 100, 14, False)
+
+
+
+def calculate_total_cost(Booked_Holidays):
+    total_price = []
+    for booking in Booked_Holidays:
+        total_price.append(call(booking,"calculate_cost"))
+    return sum(total_price)
+
+
+def extract_total_vacation_summary(booking):
+    vacation_summary= []
+    for booking in Booked_Holidays:
+        vacation_summary.append(call(booking,"describe_package"))
+    return vacation_summary
+
+        
+    
+
+
+
+
+
+
+
 
 
