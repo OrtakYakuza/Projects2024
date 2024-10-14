@@ -88,11 +88,6 @@ def find(cls, key_name):
         return find(cls["_parent"], key_name)
     raise NotImplementedError("Missing method " + key_name)
 
-
-
-
-#>>>>>>> SoCo-hs24-group-55-a1/vacation_booking.py
-
 # make function
 Booked_Holidays = []
 
@@ -131,32 +126,45 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
         raise ValueError("Package is nonexistent")
 
 beach_resort1 = make(BeachResort, "Maldives", 100, 7, True)
-adventure_trip1 = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy").   #these are in the Booked_holidays List
+adventure_trip1 = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy")  #these are in the Booked_holidays List
 luxury_cruise1 = make(LuxuryCruise, "Mediterranean", 100, 14, True)
 
-
-
-
-def calculate_total_cost(Booked_Holidays):
+def calculate_total_cost():
     total_price = []
-    for booking in Booked_Holidays:
-        total_price.append(call(booking,"calculate_cost"))
-    return sum(total_price)
+    if VacationBookingSummary["search_term"] is None:
+        for booking in Booked_Holidays:
+            total_price.append(call(booking,"calculate_cost"))
+        return sum(total_price)
+    else:
+        for booking in Booked_Holidays:
+            if VacationBookingSummary["search_term"].lower() in booking["_class"]["_classname"].lower():
+                total_price.append(call(booking,"calculate_cost"))
+        return sum(total_price)
 
 
-def extract_total_vacation_summary(booking):
-    vacation_summary= []
-    for booking in Booked_Holidays:
-        vacation_summary.append(call(booking,"describe_package"))
-    return vacation_summary
-
+def extract_total_vacation_summary():
+    Summary = []
+    if VacationBookingSummary["search_term"] is None:
+        for booking in Booked_Holidays:
+            Summary.append(call(booking,"describe_package"))
+        return Summary
+    else:
+        for booking in Booked_Holidays:
+            if VacationBookingSummary["search_term"].lower() in booking["_class"]["_classname"].lower():
+                Summary.append(call(booking,"describe_package"))
+        return Summary
         
-    
+VacationBookingSummary = {
+    "search_term" : None
+}
 
 
-
-
-
+def make_vacation_booking_summary(search_term=None):
+    return {
+        "search_term": search_term,
+        "calculate_total_cost": calculate_total_cost,
+        "extract_total_vacation_summary": extract_total_vacation_summary
+    }
 
 
 
