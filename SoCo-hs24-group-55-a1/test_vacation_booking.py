@@ -87,3 +87,5 @@ def test_vacation_booking_summary_LuxuryCruise():
         print(f"test_vacation_booking_summary_LuxuryCruise: fail - {e}")
     except Exception as e:
         print(f"test_vacation_booking_summary_LuxuryCruise: exception - {e}")
+
+#
