@@ -152,11 +152,10 @@ def test_vacation_booking_summary_totalcost():
 def test_vacation_booking_summary():
         summary = make_vacation_booking_summary()  
         vacation_summary = summary["extract_total_vacation_summary"]()
-        expected_summary = [
+        expected_summary = 
             "The 5 day long Beach Resort vacation in Bosnia includes surfing.",
             "The 5 day long Adventure Trip in Indonesia is considered hard.",
             "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."
-        ]
         assert vacation_summary == expected_summary
 
 
@@ -169,7 +168,7 @@ def test_vacation_booking_summary_AdventureTrip_totalcost():
 def test_vacation_booking_summary_AdventureTrip():
         summary = make_vacation_booking_summary("AdventureTrip")
         vacation_summary = summary["extract_total_vacation_summary"]()
-        expected_summary = ["The 5 day long Adventure Trip in Indonesia is considered hard."]
+        expected_summary = "The 5 day long Adventure Trip in Indonesia is considered hard."
         assert vacation_summary == expected_summary
 
 
@@ -183,7 +182,7 @@ def test_vacation_booking_summary_BeachResort_totalcost():
 def test_vacation_booking_summary_BeachResort():
         summary = make_vacation_booking_summary("BeachResort")
         vacation_summary = summary["extract_total_vacation_summary"]()
-        expected_summary = ["The 5 day long Beach Resort vacation in Bosnia includes surfing."]
+        expected_summary = "The 5 day long Beach Resort vacation in Bosnia includes surfing."
         assert vacation_summary == expected_summary
 
 
@@ -197,7 +196,7 @@ def test_vacation_booking_summary_LuxuryCruise_totalcost():
 def test_vacation_booking_summary_LuxuryCruise():
         summary = make_vacation_booking_summary("LuxuryCruise")
         vacation_summary = summary["extract_total_vacation_summary"]()
-        expected_summary = ["The 5 day long Luxury Cruise vacation in Panama includes a private Suite."]
+        expected_summary = "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."
         assert vacation_summary == expected_summary
 
 
