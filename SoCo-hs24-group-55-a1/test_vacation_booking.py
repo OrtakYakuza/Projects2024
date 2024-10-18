@@ -1,5 +1,5 @@
 import time
-from vacation_booking_vers2 import BeachResort, AdventureTrip, LuxuryCruise, make, call
+from vacation_booking import BeachResort, AdventureTrip, LuxuryCruise, make, call
 
 beach_resort_without_surfing = make(BeachResort, "Bosnia", 100, 5, False)
 beach_resort_with_surfing = make(BeachResort, "Bosnia", 100, 5, True)
