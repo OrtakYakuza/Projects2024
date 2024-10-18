@@ -171,6 +171,7 @@ VacationBookingSummary = {
 
 
 def make_vacation_booking_summary(search_term=None):
+    VacationBookingSummary["search_term"] = search_term 
     return {
         "search_term": search_term,
         "calculate_total_cost": calculate_total_cost,
