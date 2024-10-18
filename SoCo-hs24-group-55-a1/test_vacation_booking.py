@@ -1,3 +1,4 @@
+import sys
 import time
 from vacation_booking import BeachResort, AdventureTrip, LuxuryCruise, make, call
 
@@ -145,6 +146,8 @@ def run_tests():
     for (name, test) in globals().items():
         if not name.startswith("test_"):
             continue
+        if select_pattern and select_pattern not in name:
+            continue
         try:
             test()
             results["pass"] += 1
@@ -157,4 +160,8 @@ def run_tests():
     print(f"error {results['error']}")
 
 if __name__ == "__main__":
-    run_tests() 
+    if len(sys.argv) > 2 and sys.argv[1] == "--select":
+        select_pattern = sys.argv[2]
+    else:
+        select_pattern = None
+    run_tests()
