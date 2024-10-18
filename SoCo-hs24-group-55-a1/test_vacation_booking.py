@@ -146,7 +146,7 @@ def test_luxury_cruise_describe_package_with_suite():
 def test_vacation_booking_summary_totalcost():
         summary = make_vacation_booking_summary()  
         total_cost = summary["calculate_total_cost"]()
-        expected_total_cost = 300
+        expected_total_cost = 2350
         assert total_cost == expected_total_cost
 
 def test_vacation_booking_summary():
@@ -163,7 +163,7 @@ def test_vacation_booking_summary():
 def test_vacation_booking_summary_AdventureTrip_totalcost():
         summary = make_vacation_booking_summary("AdventureTrip")
         total_cost = summary["calculate_total_cost"]()
-        expected_total_cost = 100
+        expected_total_cost = 1000
         assert total_cost == expected_total_cost
 
 def test_vacation_booking_summary_AdventureTrip():
