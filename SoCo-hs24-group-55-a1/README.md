@@ -26,9 +26,12 @@ we adjusted the functions to be directly connected to the the VacationBookingSum
 
 10.10.24 - 17.10.24
 
-prior to meeting up to do the last step of the assignemt we all reviewed how to write tests in accordance with the lecture + book
-addtionally we brainstormed ideas seperately how we would go on about soliving step3 so that we can implement the proper solution together
+prior to meeting up to do the last step of the assignment we all reviewed how to write tests in accordance with the lecture + book
+addtionally we brainstormed ideas seperately how we would go on about solving step3 so that we can implement the proper solution together
 
 18.10.24
 
 we decided to first implement the test cases we wanted to do by splitting them among us
+After writing the tests one of us went through all of the tests to rename and restructurize, so that theyre now organized.
+for the time we researched about the time.time() function 
+we didnt know how to implement the select pattern functionality so we asked chatgpt: how to implement a select pattern through terminal for running tests. Then we decided to use the sys.argv which is quite understandable.
