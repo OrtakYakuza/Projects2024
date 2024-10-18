@@ -156,5 +156,5 @@ def run_tests():
     print(f"fail {results['fail']}")
     print(f"error {results['error']}")
 
-    if __name__ == "__main__":
+if __name__ == "__main__":
     run_tests() 
