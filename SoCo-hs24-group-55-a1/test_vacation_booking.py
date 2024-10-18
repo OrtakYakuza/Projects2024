@@ -1,3 +1,62 @@
+def test_vacation_booking_summary_totalcost():
+        summary = make_vacation_booking_summary()  
+        total_cost = summary["calculate_total_cost"]()
+        expected_total_cost = 300
+        assert total_cost == expected_total_cost
+
+def test_vacation_booking_summary():
+        summary = make_vacation_booking_summary()  
+        vacation_summary = summary["extract_total_vacation_summary"]()
+        expected_summary = [
+            "The 5 day long Beach Resort vacation in Bosnia includes surfing.",
+            "The 5 day long Adventure Trip in Indonesia is considered hard.",
+            "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."
+        ]
+        assert vacation_summary == expected_summary
+
+
+def test_vacation_booking_summary_AdventureTrip_totalcost():
+        summary = make_vacation_booking_summary("AdventureTrip")
+        total_cost = summary["calculate_total_cost"]()
+        expected_total_cost = 100
+        assert total_cost == expected_total_cost
+
+def test_vacation_booking_summary_AdventureTrip():
+        summary = make_vacation_booking_summary("AdventureTrip")
+        vacation_summary = summary["extract_total_vacation_summary"]()
+        expected_summary = ["The 5 day long Adventure Trip in Indonesia is considered hard."]
+        assert vacation_summary == expected_summary
+
+
+def test_vacation_booking_summary_BeachResort_totalcost():
+        summary = make_vacation_booking_summary("BeachResort")
+        total_cost = summary["calculate_total_cost"]()
+        expected_total_cost = 600
+        assert total_cost == expected_total_cost
+
+
+def test_vacation_booking_summary_BeachResort():
+        summary = make_vacation_booking_summary("BeachResort")
+        vacation_summary = summary["extract_total_vacation_summary"]()
+        expected_summary = ["The 5 day long Beach Resort vacation in Bosnia includes surfing."]
+        assert vacation_summary == expected_summary
+
+
+def test_vacation_booking_summary_LuxuryCruise_totalcost():
+        summary = make_vacation_booking_summary("LuxuryCruise")
+        total_cost = summary["calculate_total_cost"]()
+        expected_total_cost = 750
+        assert total_cost == expected_total_cost
+   
+
+def test_vacation_booking_summary_LuxuryCruise():
+        summary = make_vacation_booking_summary("LuxuryCruise")
+        vacation_summary = summary["extract_total_vacation_summary"]()
+        expected_summary = ["The 5 day long Luxury Cruise vacation in Panama includes a private Suite."]
+        assert vacation_summary == expected_summary
+   
+
+=======
 import sys
 import time
 from vacation_booking import BeachResort, AdventureTrip, LuxuryCruise, make, call
@@ -141,6 +200,66 @@ def test_luxury_cruise_describe_package_with_suite():
     except Exception:
         print("test_luxury_cruise_describe_package_with_suite: error")
 
+#VactionBookingSummary Tests
+
+def test_vacation_booking_summary_totalcost():
+        summary = make_vacation_booking_summary()  
+        total_cost = summary["calculate_total_cost"]()
+        expected_total_cost = 300
+        assert total_cost == expected_total_cost
+
+def test_vacation_booking_summary():
+        summary = make_vacation_booking_summary()  
+        vacation_summary = summary["extract_total_vacation_summary"]()
+        expected_summary = [
+            "The 5 day long Beach Resort vacation in Bosnia includes surfing.",
+            "The 5 day long Adventure Trip in Indonesia is considered hard.",
+            "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."
+        ]
+        assert vacation_summary == expected_summary
+
+
+def test_vacation_booking_summary_AdventureTrip_totalcost():
+        summary = make_vacation_booking_summary("AdventureTrip")
+        total_cost = summary["calculate_total_cost"]()
+        expected_total_cost = 100
+        assert total_cost == expected_total_cost
+
+def test_vacation_booking_summary_AdventureTrip():
+        summary = make_vacation_booking_summary("AdventureTrip")
+        vacation_summary = summary["extract_total_vacation_summary"]()
+        expected_summary = ["The 5 day long Adventure Trip in Indonesia is considered hard."]
+        assert vacation_summary == expected_summary
+
+
+def test_vacation_booking_summary_BeachResort_totalcost():
+        summary = make_vacation_booking_summary("BeachResort")
+        total_cost = summary["calculate_total_cost"]()
+        expected_total_cost = 600
+        assert total_cost == expected_total_cost
+
+
+def test_vacation_booking_summary_BeachResort():
+        summary = make_vacation_booking_summary("BeachResort")
+        vacation_summary = summary["extract_total_vacation_summary"]()
+        expected_summary = ["The 5 day long Beach Resort vacation in Bosnia includes surfing."]
+        assert vacation_summary == expected_summary
+
+
+def test_vacation_booking_summary_LuxuryCruise_totalcost():
+        summary = make_vacation_booking_summary("LuxuryCruise")
+        total_cost = summary["calculate_total_cost"]()
+        expected_total_cost = 750
+        assert total_cost == expected_total_cost
+   
+
+def test_vacation_booking_summary_LuxuryCruise():
+        summary = make_vacation_booking_summary("LuxuryCruise")
+        vacation_summary = summary["extract_total_vacation_summary"]()
+        expected_summary = ["The 5 day long Luxury Cruise vacation in Panama includes a private Suite."]
+        assert vacation_summary == expected_summary
+
+
 def run_tests():
     results = {"pass": 0, "fail": 0, "error": 0}
     for (name, test) in globals().items():
@@ -165,3 +284,4 @@ if __name__ == "__main__":
     else:
         select_pattern = None
     run_tests()
+>>>>>>> SoCo-hs24-group-55-a1/test_vacation_booking.py
