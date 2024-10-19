@@ -173,6 +173,9 @@ VacationBookingSummary = {
 
 
 def make_vacation_booking_summary(search_term=None):
+    valid_classes = [BeachResort["_classname"].lower(), AdventureTrip["_classname"].lower(), LuxuryCruise["_classname"].lower()]
+    if search_term and search_term.lower() not in valid_classes:
+        raise ValueError("Invalid search term")
     VacationBookingSummary["search_term"] = search_term 
     return {
         "search_term": search_term,
