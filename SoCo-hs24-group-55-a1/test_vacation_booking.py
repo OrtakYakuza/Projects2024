@@ -13,7 +13,7 @@ adventure_trip_negative_days = make(AdventureTrip, "Indonesia", 100, -5, "hard")
 luxury_cruise_without_suite = make(LuxuryCruise, "Panama", 100, 5, False)
 luxury_cruise_with_suite = make(LuxuryCruise, "Panama", 100, 5, True)
 luxury_cruise_calculate_cost_zero_days = make(LuxuryCruise, "Panama", 100, 0, True)
-invalid_package = make("Surfing", "Panama", 100, 0, True)
+invalid_package = make(what, "Panama", 100, 0, True)
 
 def test_beach_resort_calculate_cost_without_surfing():
     try: 
@@ -240,12 +240,12 @@ def test_luxury_cruise_calculate_cost_zero_days():
     assert expected_result == actual_result
 
 def test_beach_resort_invalid_location():
-     expected_result = ValueError
+    expected_result = ValueError
     actual_result = call(beach_resort_invalid_location, "describe_package")
     assert expected_result == actual_result
 
 def test_invalid_package():
-     expected_result = ValueError
+    expected_result = NameError
     actual_result = call(invalid_package, "describe_package")
     assert expected_result == actual_result
 
