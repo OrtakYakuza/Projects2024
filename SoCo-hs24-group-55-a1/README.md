@@ -68,8 +68,11 @@ test_beach_resort_invalid_surfing()
 test_beach_resort_invalid_location()
 -> here its the same idea but with the location for a package. we want to make sure that when eg a integer is entered instead of a string a value error is raised 
 
-def test_invalid_package()
--> we have 3 different packages from which you can choose. there are no options that should be able to work. we test that this is the case by trying to describe a booking with an invalid package
+test_invalid_package()
+-> we have 3 different packages from which you can choose. there are no options that should be able to work. we test that this is the case by trying to ininiate a summary with an invalid searchterm
+
+test_invalid_searchterm()
+-> we only have 3 valid classes for which the vacation booking summary classes should work if one uses a searchterm not related to our classes a value error should be raised which is what this test does. it does this by trying to 
 
 After writing the tests one of us went through all of the tests to rename and restructurize, so that theyre now organized.
 for the time we researched about the time.time() function 
