@@ -208,10 +208,10 @@ def test_vacation_booking_summary_LuxuryCruise():
 
 #EdgeCases
 def test_vacation_booking_summary_empty_totalcost():
-    summary = make_vacation_booking_summary()
-    total_cost = summary["calculate_total_cost"]()
-    expected_total_cost = 0
-    assert total_cost == expected_total_cost
+        summary = make_vacation_booking_summary()
+        total_cost = summary["calculate_total_cost"]()
+        expected_total_cost = 0
+        assert total_cost == expected_total_cost
 
 def test_vacation_booking_summary_empty():
         summary = make_vacation_booking_summary()
@@ -220,34 +220,40 @@ def test_vacation_booking_summary_empty():
         assert vacation_summary == expected_summary
 
 def test_adventure_trip_calculate_cost_negative_cost():
-    expected_result = ValueError    
-    actual_result = call(adventure_trip_negative_cost, "calculate_cost")
-    assert expected_result == actual_result
+        expected_result = ValueError    
+        actual_result = call(adventure_trip_negative_cost, "calculate_cost")
+        assert expected_result == actual_result
 
 def test_adventure_trip_calculate_cost_negative_days():
-    expected_result = ValueError    
-    actual_result = call(adventure_trip_negative_days, "calculate_cost")
-    assert expected_result == actual_result
+        expected_result = ValueError    
+        actual_result = call(adventure_trip_negative_days, "calculate_cost")
+        assert expected_result == actual_result
 
 def test_beach_resort_invalid_surfing():
-    expected_result = ValueError    
-    actual_result = call(beach_resort_invalid_surfing, "calculate_cost")
-    assert expected_result == actual_result
+        expected_result = ValueError    
+        actual_result = call(beach_resort_invalid_surfing, "calculate_cost")
+        assert expected_result == actual_result
 
 def test_luxury_cruise_calculate_cost_zero_days():
-    expected_result = ValueError    
-    actual_result = call(luxury_cruise_calculate_cost_zero_days, "calculate_cost")
-    assert expected_result == actual_result
+        expected_result = ValueError    
+        actual_result = call(luxury_cruise_calculate_cost_zero_days, "calculate_cost")
+        assert expected_result == actual_result
 
 def test_beach_resort_invalid_location():
-    expected_result = ValueError
-    actual_result = call(beach_resort_invalid_location, "describe_package")
-    assert expected_result == actual_result
+        expected_result = ValueError
+        actual_result = call(beach_resort_invalid_location, "describe_package")
+        assert expected_result == actual_result
 
 def test_invalid_package():
-    expected_result = NameError
-    actual_result = call(invalid_package, "describe_package")
-    assert expected_result == actual_result
+        expected_result = NameError
+        actual_result = call(invalid_package, "describe_package")
+        assert expected_result == actual_result
+
+def test_invalid_searchterm():
+        expected_result = ValueError
+        actual_result = make_vacation_booking_summary(search_term="idontknow")
+        assert expected_result == actual_result
+
 
 
 
