@@ -92,6 +92,8 @@ def find(cls, key_name):
 Booked_Holidays = []
 
 def make(package, destination, cost_per_day, duration_in_days, *args):
+    if not isinstance(destination, str):
+        raise ValueError("Destination must be a string")
     if cost_per_day < 0:
         raise ValueError("Cost per day cannot be negative")
     if duration_in_days <= 0:
