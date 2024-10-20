@@ -79,5 +79,10 @@ for the time we researched about the time.time() function
 we didnt know how to implement the select pattern functionality so we asked chatgpt: how to implement a select pattern through terminal for running tests. Then we decided to use the sys.argv which is quite understandable
 
 19.10.24
+implemented some "defensive coding" so that errors are raised with incorrect values and tests also work accordingly
 
-coorected some minor mistake in our code so that tests work right
+20.10.24
+ran into problems with edge case tests which we solved together
+tried to implement the set up/tear down function that needs to be improved
+
+21.10.24
