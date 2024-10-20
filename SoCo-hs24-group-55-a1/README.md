@@ -72,8 +72,12 @@ test_invalid_package()
 -> we have 3 different packages from which you can choose. there are no options that should be able to work. we test that this is the case by trying to ininiate a summary with an invalid searchterm
 
 test_invalid_searchterm()
--> we only have 3 valid classes for which the vacation booking summary classes should work if one uses a searchterm not related to our classes a value error should be raised which is what this test does. it does this by trying to 
+-> we only have 3 valid classes for which the vacation booking summary classes should work if one uses a searchterm not related to our classes a value error should be raised which is what this test does. it does this by trying to make a vacation summary with an invalid searchterm
 
 After writing the tests one of us went through all of the tests to rename and restructurize, so that theyre now organized.
 for the time we researched about the time.time() function 
 we didnt know how to implement the select pattern functionality so we asked chatgpt: how to implement a select pattern through terminal for running tests. Then we decided to use the sys.argv which is quite understandable
+
+19.10.24
+
+coorected some minor mistake in our code so that tests work right
