@@ -167,7 +167,7 @@ def test_adventure_trip_negative_cost():
         assert False, ""
     except ValueError:
         assert True
-    except Exception as e:
+    except Exception:
         assert False, f""
 
 
@@ -177,7 +177,7 @@ def test_adventure_trip_negative_days():
         assert False, ""
     except ValueError:
         assert True 
-    except Exception as e:
+    except Exception:
         assert False, f""
 
 def test_beach_resort_invalid_surfing():
@@ -186,7 +186,7 @@ def test_beach_resort_invalid_surfing():
         assert False, ""
     except ValueError:
         assert True  
-    except Exception as e:
+    except Exception:
         assert False, f""
 
 def test_luxury_cruise_zero_days():
@@ -195,7 +195,7 @@ def test_luxury_cruise_zero_days():
         assert False, ""
     except ValueError:
         assert True  
-    except Exception as e:
+    except Exception:
         assert False, f""
 
 def test_beach_resort_invalid_location():
@@ -204,7 +204,7 @@ def test_beach_resort_invalid_location():
         assert False, ""
     except ValueError:
         assert True  
-    except Exception as e:
+    except Exception:
         assert False, f""
 
 def test_invalid_package():
@@ -213,7 +213,7 @@ def test_invalid_package():
         assert False, ""
     except NameError:
         assert True 
-    except Exception as e:
+    except Exception:
         assert False, f""
 
 def test_invalid_searchterm():
@@ -222,7 +222,7 @@ def test_invalid_searchterm():
         assert False, ""
     except ValueError:
         assert True 
-    except Exception as e:
+    except Exception:
         assert False, f""
 
 # run all tests
