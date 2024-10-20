@@ -53,14 +53,14 @@ test_vacation_booking_summary_empty_totalcost()
 test_vacation_booking_summary_empty()
 -> the same is done here. this test was chosen to ensure that the correct output when calling for a summary is produced when there are no bookings made 
 
-test_adventure_trip_calculate_cost_negative_cost
--> as there is no such thing as negative cost here we want to make sure that when a package is created with negative cost a value error is raised. here we test this specifically by trying to calculating the cost which raises a value error
+test_adventure_trip_negative_cost
+-> as there is no such thing as negative cost here we want to make sure that when a package is created with negative cost a value error is raised. here we test this by trying to make a vacation with negative cost
 
 test_adventure_trip_calculate_cost_negative_days()
 -> same goes with negative days which make no logical sense at all. the same thing as in the test before is done here to make sure a package with negative days raises an error
 
-test_luxury_cruise_calculate_cost_zero_days()
--> a holiday with zero days makes no sense which is what this test is for. here we calculate the cost of a holiday with zero days which then logically should raise a value error
+test_luxury_cruise_zero_days()
+-> a holiday with zero days makes no sense which is what this test is for. here we make a holiday with zero days which then logically should raise a value error
 
 test_beach_resort_invalid_surfing()
 -> each of our packages has an attribute which needs to be defined when making a package (surfing,difficulty,suite) these are either a bool or for the adventurepark a string. here we make sure that when an invalid attribute is used a value error is raised. we test this here specifically with trying to describe a package
