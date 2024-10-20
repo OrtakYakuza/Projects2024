@@ -3,20 +3,6 @@ import time
 from vacation_booking import BeachResort, AdventureTrip, LuxuryCruise, make, call
 from colorama import Fore, Style
 
-
-beach_resort_without_surfing = make(BeachResort, "Bosnia", 100, 5, False)
-beach_resort_with_surfing = make(BeachResort, "Bosnia", 100, 5, True)
-beach_resort_invalid_location = make(BeachResort, 5, 100, 5, True)
-each_resort_invalid_surfing = make(BeachResort, "Bosnia", 100, 5, 0)
-adventure_trip_easy = make(AdventureTrip, "Indonesia", 100, 5, "easy")
-adventure_trip_hard = make(AdventureTrip, "Indonesia", 100, 5, "hard")
-adventure_trip_negative_cost = make(AdventureTrip, "Indonesia", -100, 5, "hard")
-adventure_trip_negative_days = make(AdventureTrip, "Indonesia", 100, -5, "hard")
-luxury_cruise_without_suite = make(LuxuryCruise, "Panama", 100, 5, False)
-luxury_cruise_with_suite = make(LuxuryCruise, "Panama", 100, 5, True)
-luxury_cruise_calculate_cost_zero_days = make(LuxuryCruise, "Panama", 100, 0, True)
-invalid_package = make(what, "Panama", 100, 0, True)
-
 def setUp():
     global beach_resort_without_surfing, beach_resort_with_surfing, beach_resort_invalid_location, each_resort_invalid_surfing, adventure_trip_easy, adventure_trip_hard, adventure_trip_negative_cost, adventure_trip_negative_days, luxury_cruise_without_suite, luxury_cruise_with_suite, luxury_cruise_calculate_cost_zero_days, invalid_package
 
