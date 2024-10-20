@@ -3,12 +3,37 @@ import time
 from vacation_booking import BeachResort, AdventureTrip, LuxuryCruise, make, call
 from colorama import Fore, Style
 
-beach_resort_without_surfing = make(BeachResort, "Bosnia", 100, 5, False)
-beach_resort_with_surfing = make(BeachResort, "Bosnia", 100, 5, True)
-adventure_trip_easy = make(AdventureTrip, "Indonesia", 100, 5, "easy")
-adventure_trip_hard = make(AdventureTrip, "Indonesia", 100, 5, "hard")
-luxury_cruise_without_suite = make(LuxuryCruise, "Panama", 100, 5, False)
-luxury_cruise_with_suite = make(LuxuryCruise, "Panama", 100, 5, True)
+def setUp():
+    global beach_resort_without_surfing, beach_resort_with_surfing, beach_resort_invalid_location, each_resort_invalid_surfing, adventure_trip_easy, adventure_trip_hard, adventure_trip_negative_cost, adventure_trip_negative_days, luxury_cruise_without_suite, luxury_cruise_with_suite, luxury_cruise_calculate_cost_zero_days, invalid_package
+
+    beach_resort_without_surfing = make(BeachResort, "Bosnia", 100, 5, False)
+    beach_resort_with_surfing = make(BeachResort, "Bosnia", 100, 5, True)
+    beach_resort_invalid_location = make(BeachResort, 5, 100, 5, True)
+    each_resort_invalid_surfing = make(BeachResort, "Bosnia", 100, 5, 0)
+    adventure_trip_easy = make(AdventureTrip, "Indonesia", 100, 5, "easy")
+    adventure_trip_hard = make(AdventureTrip, "Indonesia", 100, 5, "hard")
+    adventure_trip_negative_cost = make(AdventureTrip, "Indonesia", -100, 5, "hard")
+    adventure_trip_negative_days = make(AdventureTrip, "Indonesia", 100, -5, "hard")
+    luxury_cruise_without_suite = make(LuxuryCruise, "Panama", 100, 5, False)
+    luxury_cruise_with_suite = make(LuxuryCruise, "Panama", 100, 5, True)
+    luxury_cruise_calculate_cost_zero_days = make(LuxuryCruise, "Panama", 100, 0, True)
+    invalid_package = make(what, "Panama", 100, 0, True)
+
+def tearDown():
+    global beach_resort_without_surfing, beach_resort_with_surfing, beach_resort_invalid_location, each_resort_invalid_surfing, adventure_trip_easy, adventure_trip_hard, adventure_trip_negative_cost, adventure_trip_negative_days, luxury_cruise_without_suite, luxury_cruise_with_suite, luxury_cruise_calculate_cost_zero_days, invalid_package
+
+    beach_resort_without_surfing = None
+    beach_resort_with_surfing = None
+    beach_resort_invalid_location = None
+    each_resort_invalid_surfing = None
+    adventure_trip_easy = None
+    adventure_trip_hard = None
+    adventure_trip_negative_cost = None
+    adventure_trip_negative_days = None
+    luxury_cruise_without_suite = None
+    luxury_cruise_with_suite = None
+    luxury_cruise_calculate_cost_zero_days = None
+    invalid_package = None
 
 def test_beach_resort_calculate_cost_without_surfing():
         expected_result = 500        # 5*100 (basis) 
@@ -143,7 +168,8 @@ def run_tests():
     for (name, test) in globals().items():
         if not name.startswith("test_"):
             continue
-        start_time = time.time()                        #für farben (colorama) library Ai zur unterstützung genutzt (README.md ergänzen)
+        start_time = time.time() #für farben (colorama) library Ai zur unterstützung genutzt (README.md ergänzen)
+        setUp()                        
         try:
             test()
             results["pass"] += 1
@@ -154,11 +180,11 @@ def run_tests():
         except Exception as error:
             results["error"] += 1
             print(f"{Fore.YELLOW}{name}: error{Style.RESET_ALL} ({time.time() - start_time:.2f} seconds) - {error}")
+        tearDown()
     print(f"{Style.BRIGHT}{Fore.CYAN}\n{'-'*30}\nSummary\n{'-'*30}{Style.RESET_ALL}")
     print(f"{Fore.GREEN}pass: {results['pass']}{Style.RESET_ALL}")
     print(f"{Fore.RED}fail: {results['fail']}{Style.RESET_ALL}")
     print(f"{Fore.YELLOW}error: {results['error']}{Style.RESET_ALL}")
-
 
 if __name__ == "__main__":
     if len(sys.argv) > 2 and sys.argv[1] == "--select":
@@ -166,3 +192,4 @@ if __name__ == "__main__":
     else:
         select_pattern = None
     run_tests()
+
