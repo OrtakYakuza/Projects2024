@@ -164,66 +164,66 @@ def test_vacation_booking_summary_empty():
 def test_adventure_trip_negative_cost():
     try:
         adventure_trip_negative_cost = make(AdventureTrip, "Indonesia", -500, 5, "hard")
-        assert False, ""
+        assert False
     except ValueError:
         assert True
     except Exception:
-        assert False, f""
+        assert False
 
 
 def test_adventure_trip_negative_days():
     try:
         adventure_trip_negative_days = make(AdventureTrip, "Himalayas", 150, -3, "easy")
-        assert False, ""
+        assert False
     except ValueError:
         assert True 
     except Exception:
-        assert False, f""
+        assert False
 
 def test_beach_resort_invalid_surfing():
     try:
         beach_resort_invalid_surfing = make(BeachResort, "Maldives", 200, 7, "what")
-        assert False, ""
+        assert False
     except ValueError:
         assert True  
     except Exception:
-        assert False, f""
+        assert False
 
 def test_luxury_cruise_zero_days():
     try:
         luxury_cruise_calculate_cost_zero_days = make(LuxuryCruise, "Caribbean", 300, 0, True)
-        assert False, ""
+        assert False
     except ValueError:
         assert True  
     except Exception:
-        assert False, f""
+        assert False
 
 def test_beach_resort_invalid_location():
     try:
         beach_resort_invalid_location = make(BeachResort, 5, 800, 4, True)
-        assert False, ""
+        assert False
     except ValueError:
         assert True  
     except Exception:
-        assert False, f""
+        assert False
 
 def test_invalid_package():
     try:
         invalid_package = make(Hello, 3, 700, 5, True)
-        assert False, ""
+        assert False
     except NameError:
         assert True 
     except Exception:
-        assert False, f""
+        assert False
 
 def test_invalid_searchterm():
     try:
         make_vacation_booking_summary(search_term="idontknow")
-        assert False, ""
+        assert False
     except ValueError:
         assert True 
     except Exception:
-        assert False, f""
+        assert False
 
 # run all tests
 def run_tests():
