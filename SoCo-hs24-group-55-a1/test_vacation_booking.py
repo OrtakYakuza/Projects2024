@@ -245,9 +245,12 @@ def test_beach_resort_invalid_location():
         assert expected_result == actual_result
 
 def test_invalid_package():
-        expected_result = NameError
-        actual_result = call(invalid_package, "describe_package")
-        assert expected_result == actual_result
+    try:
+        call(invalid_package, "describe_package")
+    except NameError:
+        assert True  
+    else:
+        assert False
 
 def test_invalid_searchterm():
         expected_result = ValueError
