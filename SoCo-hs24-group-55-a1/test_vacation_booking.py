@@ -284,9 +284,6 @@ def test_invalid_searchterm():
         assert False, f"Unexpected exception raised: {e}"
 
 
-
-
-
 def run_tests():
     results = {"pass": 0, "fail": 0, "error": 0}
     for (name, test) in globals().items():
