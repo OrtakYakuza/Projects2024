@@ -92,8 +92,17 @@ def find(cls, key_name):
 Booked_Holidays = []
 
 def make(package, destination, cost_per_day, duration_in_days, *args):
+    if not isinstance(destination, str):
+        raise ValueError("Destination must be a string")
+    if cost_per_day < 0:
+        raise ValueError("Cost per day cannot be negative")
+    if duration_in_days <= 0:
+        raise ValueError("Duration must be greater than zero")
+
     if package == BeachResort:
         includes_surfing = args[0]
+        if not isinstance(includes_surfing, bool):
+            raise ValueError("Includes_surfing must be a boolean")
         new_thing = {
             "destination" : destination,
             "cost_per_day" : cost_per_day,
@@ -104,6 +113,8 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
         return new_thing
     elif package == AdventureTrip:
         difficulty_level = args[0]
+        if difficulty_level not in ["easy", "hard"]:
+            raise ValueError("Invalid difficulty level")
         new_thing = {
             "destination" : destination,
             "cost_per_day" : cost_per_day,
@@ -114,6 +125,8 @@ def make(package, destination, cost_per_day, duration_in_days, *args):
         return new_thing
     elif package == LuxuryCruise:
         has_private_suite = args[0]
+        if not isinstance(has_private_suite, bool):
+            raise ValueError("has_private_suite must be a boolean")
         new_thing = {
             "destination" : destination,
             "cost_per_day" : cost_per_day,
@@ -160,6 +173,12 @@ VacationBookingSummary = {
 
 
 def make_vacation_booking_summary(search_term=None):
+    valid_classes = [BeachResort["_classname"].lower(), AdventureTrip["_classname"].lower(), LuxuryCruise["_classname"].lower()]
+    if search_term is not None:
+        if not isinstance(search_term, str) or search_term.lower() not in valid_classes:
+            raise ValueError("Invalid search term")
+
+    VacationBookingSummary["search_term"] = search_term 
     return {
         "search_term": search_term,
         "calculate_total_cost": calculate_total_cost,

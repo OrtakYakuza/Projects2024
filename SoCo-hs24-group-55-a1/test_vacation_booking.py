@@ -1,7 +1,9 @@
 import sys
 import time
 from vacation_booking import BeachResort, AdventureTrip, LuxuryCruise, make, call
+from colorama import Fore, Style
 
+<<<<<<< SoCo-hs24-group-55-a1/test_vacation_booking.py
 beach_resort_without_surfing = make(BeachResort, "Bosnia", 100, 5, False)
 beach_resort_with_surfing = make(BeachResort, "Bosnia", 100, 5, True)
 beach_resort_invalid_location = make(BeachResort, 5, 100, 5, True)
@@ -14,138 +16,102 @@ luxury_cruise_without_suite = make(LuxuryCruise, "Panama", 100, 5, False)
 luxury_cruise_with_suite = make(LuxuryCruise, "Panama", 100, 5, True)
 luxury_cruise_calculate_cost_zero_days = make(LuxuryCruise, "Panama", 100, 0, True)
 invalid_package = make(what, "Panama", 100, 0, True)
+=======
+# objects
+>>>>>>> SoCo-hs24-group-55-a1/test_vacation_booking.py
 
+def setUp():
+    global beach_resort_without_surfing, beach_resort_with_surfing, beach_resort_invalid_location, each_resort_invalid_surfing, adventure_trip_easy, adventure_trip_hard, adventure_trip_negative_cost, adventure_trip_negative_days, luxury_cruise_without_suite, luxury_cruise_with_suite, luxury_cruise_calculate_cost_zero_days, invalid_package
+
+    beach_resort_without_surfing = make(BeachResort, "Bosnia", 100, 5, False)
+    beach_resort_with_surfing = make(BeachResort, "Bosnia", 100, 5, True)
+    beach_resort_invalid_location = make(BeachResort, 5, 100, 5, True)
+    each_resort_invalid_surfing = make(BeachResort, "Bosnia", 100, 5, 0)
+    adventure_trip_easy = make(AdventureTrip, "Indonesia", 100, 5, "easy")
+    adventure_trip_hard = make(AdventureTrip, "Indonesia", 100, 5, "hard")
+    adventure_trip_negative_cost = make(AdventureTrip, "Indonesia", -100, 5, "hard")
+    adventure_trip_negative_days = make(AdventureTrip, "Indonesia", 100, -5, "hard")
+    luxury_cruise_without_suite = make(LuxuryCruise, "Panama", 100, 5, False)
+    luxury_cruise_with_suite = make(LuxuryCruise, "Panama", 100, 5, True)
+    luxury_cruise_calculate_cost_zero_days = make(LuxuryCruise, "Panama", 100, 0, True)
+    invalid_package = make(what, "Panama", 100, 0, True)
+
+def tearDown():
+    global beach_resort_without_surfing, beach_resort_with_surfing, beach_resort_invalid_location, each_resort_invalid_surfing, adventure_trip_easy, adventure_trip_hard, adventure_trip_negative_cost, adventure_trip_negative_days, luxury_cruise_without_suite, luxury_cruise_with_suite, luxury_cruise_calculate_cost_zero_days, invalid_package
+
+    beach_resort_without_surfing = None
+    beach_resort_with_surfing = None
+    beach_resort_invalid_location = None
+    each_resort_invalid_surfing = None
+    adventure_trip_easy = None
+    adventure_trip_hard = None
+    adventure_trip_negative_cost = None
+    adventure_trip_negative_days = None
+    luxury_cruise_without_suite = None
+    luxury_cruise_with_suite = None
+    luxury_cruise_calculate_cost_zero_days = None
+    invalid_package = None
+
+# tests
 def test_beach_resort_calculate_cost_without_surfing():
-    try: 
         expected_result = 500        # 5*100 (basis) 
         actual_result = call(beach_resort_without_surfing, "calculate_cost")
         assert expected_result == actual_result
-        print(f"test_beach_resort_calculate_cost_without_surfing: pass")
-    except AssertionError:
-        print(f"test_beach_resort_calculate_cost_without_surfing: fail")
-    except Exception:
-        print(f"test_beach_resort_calculate_cost_without_surfing: error")
 
 def test_beach_resort_calculate_cost_with_surfing():
-    try: 
         expected_result = 600     # 5*100 (basis) + 100(surfing)
         actual_result = call(beach_resort_with_surfing, "calculate_cost")
         assert expected_result == actual_result
-        print(f"test_beach_resort_calculate_cost_with_surfing: pass")
-    except AssertionError:
-        print(f"test_beach_resort_calculate_cost_with_surfing: fail")
-    except Exception:
-        print(f"test_beach_resort_calculate_cost_with_surfing: error")
 
 def test_adventure_trip_calculate_cost_easy():
-    try:
         expected_result = 500     #5*100 (basis)
         actual_result = call(adventure_trip_easy, "calculate_cost")
         assert expected_result == actual_result
-        print(f"test_adventure_trip_calculate_cost_easy: pass")
-    except AssertionError:
-        print(f"test_adventure_trip_calculate_cost_easy: fail")
-    except Exception:
-        print(f"test_adventure_trip_calculate_cost_easy: error")
 
 def test_adventure_trip_calculate_cost_hard():
-    try:
         expected_result = 1000      #(5*100)*2 (basis times two)
         actual_result = call(adventure_trip_hard, "calculate_cost")
         assert expected_result == actual_result
-        print(f"test_adventure_trip_calculate_cost_hard: pass")
-    except AssertionError:
-        print(f"test_adventure_trip_calculate_cost_hard: fail")
-    except Exception:
-        print(f"test_adventure_trip_calculate_cost_hard: error")
 
 def test_luxury_cruise_calculate_cost_without_suite():
-    try:
         expected_result = 500       #5*100(basis)
         actual_result = call(luxury_cruise_without_suite, "calculate_cost")
         assert  expected_result == actual_result
-        print(f"test_luxury_cruise_calculate_cost_without_suite: pass")
-    except AssertionError:
-        print(f"test_luxury_cruise_calculate_cost_without_suite: fail")
-    except Exception:
-        print(f"test_luxury_cruise_calculate_cost_without_suite: error")
 
 def test_luxury_cruise_calculate_with_suite():
-    try:
         expected_result = 750       #(5*100(basis))*1.5
         actual_result = call(luxury_cruise_with_suite, "calculate_cost")
         assert  expected_result == actual_result
-        print(f"test_luxury_cruise_calculate_with_suite: pass")
-    except AssertionError:
-        print(f"test_luxury_cruise_calculate_with_suite: fail")
-    except Exception:
-        print(f"test_luxury_cruise_calculate_with_suite: error")
 
 def test_beach_resort_describe_package_without_surfing():
-    try:
-        expected_result = "The 5 day long Beach Resort vacation in 'Bosnia' does not include surfing."
+        expected_result = "The 5 day long Beach Resort vacation in Bosnia does not include surfing."
         actual_result = call(beach_resort_without_surfing, "describe_package")
         assert expected_result == actual_result
-        print("test_beach_resort_describe_package_without_surfing: pass")
-    except AssertionError:
-        print("test_beach_resort_describe_package_without_surfing: fail")
-    except Exception:
-        print("test_beach_resort_describe_package_without_surfing: error")
 
 def test_beach_resort_describe_package_with_surfing():
-    try:
-        expected_result = "The 5 day long Beach Resort vacation in 'Bosnia' includes surfing."
+        expected_result = "The 5 day long Beach Resort vacation in Bosnia includes surfing."
         actual_result = call(beach_resort_with_surfing, "describe_package")
         assert expected_result == actual_result
-        print("test_beach_resort_describe_package_with_surfing: pass")
-    except AssertionError:
-        print("test_beach_resort_describe_package_with_surfing: fail")
-    except Exception:
-        print("test_beach_resort_describe_package_with_surfing: error")
 
 def test_adventure_trip_describe_package_easy():
-    try:
-        expected_result = "The 5 day long Adventure Trip in 'Indonesia' is considered easy."
+        expected_result = "The 5 day long Adventure Trip in Indonesia is considered easy."
         actual_result = call(adventure_trip_easy, "describe_package")
         assert expected_result == actual_result
-        print("test_adventure_trip_describe_package_easy: pass")
-    except AssertionError:
-        print("test_adventure_trip_describe_package_easy: fail")
-    except Exception:
-        print("test_adventure_trip_describe_package_easy: error")
 
 def test_adventure_trip_describe_package_hard():
-    try:
-        expected_result = "The 5 day long Adventure Trip in 'Indonesia' is considered hard."
+        expected_result = "The 5 day long Adventure Trip in Indonesia is considered hard."
         actual_result = call(adventure_trip_hard, "describe_package")
         assert expected_result == actual_result
-        print("test_adventure_trip_describe_package_hard: pass")
-    except AssertionError:
-        print("test_adventure_trip_describe_package_hard: fail")
-    except Exception:
-        print("test_adventure_trip_describe_package_hard: error")
 
 def test_luxury_cruise_describe_package_without_suite():
-    try:
-        expected_result = "The 5 day long Luxury Cruise vacation in 'Panama' does not include a private Suite."
+        expected_result = "The 5 day long Luxury Cruise vacation in Panama does not include a private Suite."
         actual_result = call(luxury_cruise_without_suite, "describe_package")
         assert expected_result == actual_result
-        print("test_luxury_cruise_describe_package_without_suite: pass")
-    except AssertionError:
-        print("test_luxury_cruise_describe_package_without_suite: fail")
-    except Exception:
-        print("test_luxury_cruise_describe_package_without_suite: error")
 
 def test_luxury_cruise_describe_package_with_suite():
-    try:
-        expected_result = "The 5 day long Luxury Cruise vacation in 'Panama' includes a private Suite."
+        expected_result = "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."
         actual_result = call(luxury_cruise_with_suite, "describe_package")
         assert expected_result == actual_result
-        print("test_luxury_cruise_describe_package_with_suite: pass")
-    except AssertionError:
-        print("test_luxury_cruise_describe_package_with_suite: fail")
-    except Exception:
-        print("test_luxury_cruise_describe_package_with_suite: error")
 
 #VactionBookingSummary Tests
 
@@ -158,13 +124,11 @@ def test_vacation_booking_summary_totalcost():
 def test_vacation_booking_summary():
         summary = make_vacation_booking_summary()  
         vacation_summary = summary["extract_total_vacation_summary"]()
-        expected_summary = [
-            "The 5 day long Beach Resort vacation in Bosnia includes surfing.",
+        expected_summary = 
+            ["The 5 day long Beach Resort vacation in Bosnia includes surfing.",
             "The 5 day long Adventure Trip in Indonesia is considered hard.",
-            "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."
-        ]
+            "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."]
         assert vacation_summary == expected_summary
-
 
 def test_vacation_booking_summary_AdventureTrip_totalcost():
         summary = make_vacation_booking_summary("AdventureTrip")
@@ -178,13 +142,11 @@ def test_vacation_booking_summary_AdventureTrip():
         expected_summary = ["The 5 day long Adventure Trip in Indonesia is considered hard."]
         assert vacation_summary == expected_summary
 
-
 def test_vacation_booking_summary_BeachResort_totalcost():
         summary = make_vacation_booking_summary("BeachResort")
         total_cost = summary["calculate_total_cost"]()
         expected_total_cost = 600
         assert total_cost == expected_total_cost
-
 
 def test_vacation_booking_summary_BeachResort():
         summary = make_vacation_booking_summary("BeachResort")
@@ -192,14 +154,12 @@ def test_vacation_booking_summary_BeachResort():
         expected_summary = ["The 5 day long Beach Resort vacation in Bosnia includes surfing."]
         assert vacation_summary == expected_summary
 
-
 def test_vacation_booking_summary_LuxuryCruise_totalcost():
         summary = make_vacation_booking_summary("LuxuryCruise")
         total_cost = summary["calculate_total_cost"]()
         expected_total_cost = 750
         assert total_cost == expected_total_cost
    
-
 def test_vacation_booking_summary_LuxuryCruise():
         summary = make_vacation_booking_summary("LuxuryCruise")
         vacation_summary = summary["extract_total_vacation_summary"]()
@@ -283,29 +243,36 @@ def test_invalid_searchterm():
     except Exception as e:
         assert False, f"Unexpected exception raised: {e}"
 
-
+# run all tests
 def run_tests():
     results = {"pass": 0, "fail": 0, "error": 0}
+    print(f"{Style.BRIGHT}{Fore.CYAN}\n{'-'*30}\nRunning Tests\n{'-'*30}{Style.RESET_ALL}")
     for (name, test) in globals().items():
         if not name.startswith("test_"):
             continue
-        if select_pattern and select_pattern not in name:
-            continue
+        start_time = time.time() #für farben (colorama) library Ai zur unterstützung genutzt (README.md ergänzen)
+        setUp()                        
         try:
             test()
             results["pass"] += 1
+            print(f"{Fore.GREEN}{name}: pass{Style.RESET_ALL} ({time.time() - start_time:.2f} seconds)")
         except AssertionError:
             results["fail"] += 1
-        except Exception:
+            print(f"{Fore.RED}{name}: fail{Style.RESET_ALL} ({time.time() - start_time:.2f} seconds)")
+        except Exception as error:
             results["error"] += 1
-    print(f"pass {results['pass']}")
-    print(f"fail {results['fail']}")
-    print(f"error {results['error']}")
+            print(f"{Fore.YELLOW}{name}: error{Style.RESET_ALL} ({time.time() - start_time:.2f} seconds) - {error}")
+        tearDown()
+    print(f"{Style.BRIGHT}{Fore.CYAN}\n{'-'*30}\nSummary\n{'-'*30}{Style.RESET_ALL}")
+    print(f"{Fore.GREEN}pass: {results['pass']}{Style.RESET_ALL}")
+    print(f"{Fore.RED}fail: {results['fail']}{Style.RESET_ALL}")
+    print(f"{Fore.YELLOW}error: {results['error']}{Style.RESET_ALL}")
 
+# main function
 if __name__ == "__main__":
     if len(sys.argv) > 2 and sys.argv[1] == "--select":
         select_pattern = sys.argv[2]
     else:
         select_pattern = None
     run_tests()
->>>>>>> SoCo-hs24-group-55-a1/test_vacation_booking.py
+
