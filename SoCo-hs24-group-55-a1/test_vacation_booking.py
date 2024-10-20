@@ -3,6 +3,8 @@ import time
 from vacation_booking import BeachResort, AdventureTrip, LuxuryCruise, make, call
 from colorama import Fore, Style
 
+# objects
+
 def setUp():
     global beach_resort_without_surfing, beach_resort_with_surfing, beach_resort_invalid_location, each_resort_invalid_surfing, adventure_trip_easy, adventure_trip_hard, adventure_trip_negative_cost, adventure_trip_negative_days, luxury_cruise_without_suite, luxury_cruise_with_suite, luxury_cruise_calculate_cost_zero_days, invalid_package
 
@@ -35,11 +37,11 @@ def tearDown():
     luxury_cruise_calculate_cost_zero_days = None
     invalid_package = None
 
+# tests
 def test_beach_resort_calculate_cost_without_surfing():
         expected_result = 500        # 5*100 (basis) 
         actual_result = call(beach_resort_without_surfing, "calculate_cost")
         assert expected_result == actual_result
-
 
 def test_beach_resort_calculate_cost_with_surfing():
         expected_result = 600     # 5*100 (basis) + 100(surfing)
@@ -51,24 +53,20 @@ def test_adventure_trip_calculate_cost_easy():
         actual_result = call(adventure_trip_easy, "calculate_cost")
         assert expected_result == actual_result
 
-
 def test_adventure_trip_calculate_cost_hard():
         expected_result = 1000      #(5*100)*2 (basis times two)
         actual_result = call(adventure_trip_hard, "calculate_cost")
         assert expected_result == actual_result
-
 
 def test_luxury_cruise_calculate_cost_without_suite():
         expected_result = 500       #5*100(basis)
         actual_result = call(luxury_cruise_without_suite, "calculate_cost")
         assert  expected_result == actual_result
 
-
 def test_luxury_cruise_calculate_with_suite():
         expected_result = 750       #(5*100(basis))*1.5
         actual_result = call(luxury_cruise_with_suite, "calculate_cost")
         assert  expected_result == actual_result
-
 
 def test_beach_resort_describe_package_without_surfing():
         expected_result = "The 5 day long Beach Resort vacation in Bosnia does not include surfing."
@@ -85,24 +83,20 @@ def test_adventure_trip_describe_package_easy():
         actual_result = call(adventure_trip_easy, "describe_package")
         assert expected_result == actual_result
 
-
 def test_adventure_trip_describe_package_hard():
         expected_result = "The 5 day long Adventure Trip in Indonesia is considered hard."
         actual_result = call(adventure_trip_hard, "describe_package")
         assert expected_result == actual_result
-
 
 def test_luxury_cruise_describe_package_without_suite():
         expected_result = "The 5 day long Luxury Cruise vacation in Panama does not include a private Suite."
         actual_result = call(luxury_cruise_without_suite, "describe_package")
         assert expected_result == actual_result
 
-
 def test_luxury_cruise_describe_package_with_suite():
         expected_result = "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."
         actual_result = call(luxury_cruise_with_suite, "describe_package")
         assert expected_result == actual_result
-
 
 #VactionBookingSummary Tests
 
@@ -121,7 +115,6 @@ def test_vacation_booking_summary():
             "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."]
         assert vacation_summary == expected_summary
 
-
 def test_vacation_booking_summary_AdventureTrip_totalcost():
         summary = make_vacation_booking_summary("AdventureTrip")
         total_cost = summary["calculate_total_cost"]()
@@ -134,13 +127,11 @@ def test_vacation_booking_summary_AdventureTrip():
         expected_summary = ["The 5 day long Adventure Trip in Indonesia is considered hard."]
         assert vacation_summary == expected_summary
 
-
 def test_vacation_booking_summary_BeachResort_totalcost():
         summary = make_vacation_booking_summary("BeachResort")
         total_cost = summary["calculate_total_cost"]()
         expected_total_cost = 600
         assert total_cost == expected_total_cost
-
 
 def test_vacation_booking_summary_BeachResort():
         summary = make_vacation_booking_summary("BeachResort")
@@ -148,20 +139,20 @@ def test_vacation_booking_summary_BeachResort():
         expected_summary = ["The 5 day long Beach Resort vacation in Bosnia includes surfing."]
         assert vacation_summary == expected_summary
 
-
 def test_vacation_booking_summary_LuxuryCruise_totalcost():
         summary = make_vacation_booking_summary("LuxuryCruise")
         total_cost = summary["calculate_total_cost"]()
         expected_total_cost = 750
         assert total_cost == expected_total_cost
    
-
 def test_vacation_booking_summary_LuxuryCruise():
         summary = make_vacation_booking_summary("LuxuryCruise")
         vacation_summary = summary["extract_total_vacation_summary"]()
         expected_summary = ["The 5 day long Luxury Cruise vacation in Panama includes a private Suite."]
         assert vacation_summary == expected_summary
 
+
+# run all tests
 def run_tests():
     results = {"pass": 0, "fail": 0, "error": 0}
     print(f"{Style.BRIGHT}{Fore.CYAN}\n{'-'*30}\nRunning Tests\n{'-'*30}{Style.RESET_ALL}")
@@ -186,6 +177,7 @@ def run_tests():
     print(f"{Fore.RED}fail: {results['fail']}{Style.RESET_ALL}")
     print(f"{Fore.YELLOW}error: {results['error']}{Style.RESET_ALL}")
 
+# main function
 if __name__ == "__main__":
     if len(sys.argv) > 2 and sys.argv[1] == "--select":
         select_pattern = sys.argv[2]
