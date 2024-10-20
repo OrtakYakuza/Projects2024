@@ -165,9 +165,4 @@ if __name__ == "__main__":
         select_pattern = sys.argv[2]
     else:
         select_pattern = None
-<<<<<<< SoCo-hs24-group-55-a1/test_vacation_booking.py
     run_tests()
-=======
-    run_tests()
->>>>>>> SoCo-hs24-group-55-a1/test_vacation_booking.py
->>>>>>> SoCo-hs24-group-55-a1/test_vacation_booking.py
