@@ -107,8 +107,7 @@ def test_vacation_booking_summary_totalcost():
 def test_vacation_booking_summary():
         summary = make_vacation_booking_summary()  
         vacation_summary = summary["extract_total_vacation_summary"]()
-        expected_summary = 
-            ["The 5 day long Beach Resort vacation in Bosnia includes surfing.",
+        expected_summary = ["The 5 day long Beach Resort vacation in Bosnia includes surfing.",
             "The 5 day long Adventure Trip in Indonesia is considered hard.",
             "The 5 day long Luxury Cruise vacation in Panama includes a private Suite."]
         assert vacation_summary == expected_summary
@@ -165,66 +164,66 @@ def test_vacation_booking_summary_empty():
 def test_adventure_trip_negative_cost():
     try:
         adventure_trip_negative_cost = make(AdventureTrip, "Indonesia", -500, 5, "hard")
-        assert False, "Expected ValueError due to negative cost, but no error was raised"
+        assert False, ""
     except ValueError:
         assert True
     except Exception as e:
-        assert False, f"Unexpected exception raised: {e}"
+        assert False, f""
 
 
 def test_adventure_trip_negative_days():
     try:
         adventure_trip_negative_days = make(AdventureTrip, "Himalayas", 150, -3, "easy")
-        assert False, "Expected ValueError due to negative days, but no error was raised"
+        assert False, ""
     except ValueError:
         assert True 
     except Exception as e:
-        assert False, f"Unexpected exception raised: {e}"
+        assert False, f""
 
 def test_beach_resort_invalid_surfing():
     try:
         beach_resort_invalid_surfing = make(BeachResort, "Maldives", 200, 7, "what")
-        assert False, "Expected ValueError due to invalid surfing parameter, but no error was raised"
+        assert False, ""
     except ValueError:
         assert True  
     except Exception as e:
-        assert False, f"Unexpected exception raised: {e}"
+        assert False, f""
 
 def test_luxury_cruise_zero_days():
     try:
         luxury_cruise_calculate_cost_zero_days = make(LuxuryCruise, "Caribbean", 300, 0, True)
-        assert False, "Expected ValueError due to zero days, but no error was raised"
+        assert False, ""
     except ValueError:
         assert True  
     except Exception as e:
-        assert False, f"Unexpected exception raised: {e}"
+        assert False, f""
 
 def test_beach_resort_invalid_location():
     try:
         beach_resort_invalid_location = make(BeachResort, 5, 800, 4, True)
-        assert False, "Expected ValueError due to invalid location, but no error was raised"
+        assert False, ""
     except ValueError:
         assert True  
     except Exception as e:
-        assert False, f"Unexpected exception raised: {e}"
+        assert False, f""
 
 def test_invalid_package():
     try:
         invalid_package = make(Hello, 3, 700, 5, True)
-        assert False, "Expected NameError due to invalid package, but no error was raised"
+        assert False, ""
     except NameError:
         assert True 
     except Exception as e:
-        assert False, f"Unexpected exception raised: {e}"
+        assert False, f""
 
 def test_invalid_searchterm():
     try:
         make_vacation_booking_summary(search_term="idontknow")
-        assert False, "Expected ValueError due to invalid search term, but no error was raised"
+        assert False, ""
     except ValueError:
         assert True 
     except Exception as e:
-        assert False, f"Unexpected exception raised: {e}"
+        assert False, f""
 
 # run all tests
 def run_tests():
