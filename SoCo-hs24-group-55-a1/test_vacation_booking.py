@@ -219,7 +219,7 @@ def test_vacation_booking_summary_empty():
     expected_summary = []
     assert vacation_summary == expected_summary, f"Expected summary to be {expected_summary}, but got {vacation_summary}"
 
-def test_adventure_trip_calculate_cost_negative_cost():
+def test_adventure_trip_negative_cost():
     try:
         adventure_trip_negative_cost = make(AdventureTrip, "Indonesia", -500, 5, "hard")
         assert False, "Expected ValueError due to negative cost, but no error was raised"
@@ -229,10 +229,9 @@ def test_adventure_trip_calculate_cost_negative_cost():
         assert False, f"Unexpected exception raised: {e}"
 
 
-def test_adventure_trip_calculate_cost_negative_days():
+def test_adventure_trip_negative_days():
     try:
         adventure_trip_negative_days = make(AdventureTrip, "Himalayas", 150, -3, "easy")
-        call(adventure_trip_negative_days, "calculate_cost")
         assert False, "Expected ValueError due to negative days, but no error was raised"
     except ValueError:
         assert True 
@@ -242,17 +241,15 @@ def test_adventure_trip_calculate_cost_negative_days():
 def test_beach_resort_invalid_surfing():
     try:
         beach_resort_invalid_surfing = make(BeachResort, "Maldives", 200, 7, "what")
-        call(beach_resort_invalid_surfing, "calculate_cost")
         assert False, "Expected ValueError due to invalid surfing parameter, but no error was raised"
     except ValueError:
         assert True  
     except Exception as e:
         assert False, f"Unexpected exception raised: {e}"
 
-def test_luxury_cruise_calculate_cost_zero_days():
+def test_luxury_cruise_zero_days():
     try:
         luxury_cruise_calculate_cost_zero_days = make(LuxuryCruise, "Caribbean", 300, 0, True)
-        call(luxury_cruise_calculate_cost_zero_days, "calculate_cost")
         assert False, "Expected ValueError due to zero days, but no error was raised"
     except ValueError:
         assert True  
