@@ -8,16 +8,16 @@ started working on Step1 by splitting up the classes between ourselves
 Kept getting Recursion Errors on first commit on Nikolanew and had to ask ChatGPT with a copy of the code: why do I keep getting Recursion Errors
 tentatively finished our classes and merged them into the main branch + created make_function that works with respectively each class
 
-08.10.24 - second day of working on assignment
+08.10.24 
 
 made some minor corrections to our main class
 merged the make_function with the main class
 added missing functions to the make_function
 added some test calls to see if the code works
 
-09.10.24
+09.10.24 
 
-removed the prior added functions from mkae_function as we realized our other method was not ideal
+removed the prior added functions from make_function as we realized our other method was not ideal
 made a find/call function as this is a better way 
 
 Since we implented the find and call function, we implemented the calculate total cost and the extract total vacation summary, by creating a list (booked_holidays) and iterating over it using the call function to call calculate_cost and describe_package functions and appending them to a new list, which is summed for the cost and returned in the summary function.
@@ -50,14 +50,14 @@ addtionally implemented some tests for specific edge cases:
 test_adventure_trip_negative_cost
 -> as there is no such thing as negative cost here we want to make sure that when a package is created with negative cost a value error is raised. here we test this by trying to make a vacation with negative cost
 
-test_adventure_trip_calculate_cost_negative_days()
+test_adventure_trip_negative_days()
 -> same goes with negative days which make no logical sense at all. the same thing as in the test before is done here to make sure a package with negative days raises an error
 
 test_luxury_cruise_zero_days()
 -> a holiday with zero days makes no sense which is what this test is for. here we make a holiday with zero days which then logically should raise a value error
 
 test_beach_resort_invalid_surfing()
--> each of our packages has an attribute which needs to be defined when making a package (surfing,difficulty,suite) these are either a bool or for the adventurepark a string. here we make sure that when an invalid attribute is used a value error is raised. we test this here specifically with trying to describe a package
+-> each of our packages has an attribute which needs to be defined when making a package (surfing,difficulty,suite) these are either a bool or for the adventurepark a string. here we make sure that when an invalid attribute is used a value error is raised. we test this here specifically with trying to make a package
 
 test_beach_resort_invalid_location()
 -> here its the same idea but with the location for a package. we want to make sure that when eg a integer is entered instead of a string a value error is raised 
@@ -80,3 +80,5 @@ ran into problems with edge case tests which we solved together
 tried to implement the set up/tear down function that needs to be improved
 
 21.10.24
+fixed the tests for vacation summary as they were not working correctly before and fixed our set up/tear down function
+we finalized our assignment with a 3 hour call where we went throught the code and tests together to make sure everything works how we want it to
