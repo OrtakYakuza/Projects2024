@@ -1,6 +1,3 @@
-
----
-
 07.10.24 - First day of working on the assignment together!  
 We started by setting up our repository, adding the required folders/files, and adding members. We encountered some difficulties adding a folder, which led to our first ChatGPT prompt: "How to create a folder in GitLab."  
 We looked at branches, commits, and merging to ensure everyone was on the same page. Here we encountered difficulties with merging conflicts, leading to the next ChatGPT prompt: "Merge conflicts and how to solve them via terminal."  
