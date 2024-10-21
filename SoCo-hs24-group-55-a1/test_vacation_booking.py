@@ -201,7 +201,7 @@ def test_invalid_searchterm():
         assert False
 
 # run all tests
-def run_tests():
+def run_tests(select_pattern=None):
     results = {"pass": 0, "fail": 0, "error": 0}
     print(f"{Style.BRIGHT}{Fore.CYAN}\n{'-'*30}\nRunning Tests\n{'-'*30}{Style.RESET_ALL}")
     test_functions = [(name, test) for (name, test) in globals().items() if name.startswith("test_")]
@@ -233,5 +233,5 @@ if __name__ == "__main__":
         select_pattern = sys.argv[2]
     else:
         select_pattern = None
-    run_tests()
+    run_tests(select_pattern)
 
