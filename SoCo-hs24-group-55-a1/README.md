@@ -47,12 +47,6 @@ test_vacation_booking_summary_totalcost(), test_vacation_booking_summary(), test
 
 addtionally implemented some tests for specific edge cases:
 
-test_vacation_booking_summary_empty_totalcost()
--> this test was chosen to make sure the vacationbookingsummary class returns the correct output in every situation so even  when the list of booked holidays is empty which is what gets tested here
-
-test_vacation_booking_summary_empty()
--> the same is done here. this test was chosen to ensure that the correct output when calling for a summary is produced when there are no bookings made 
-
 test_adventure_trip_negative_cost
 -> as there is no such thing as negative cost here we want to make sure that when a package is created with negative cost a value error is raised. here we test this by trying to make a vacation with negative cost
 
