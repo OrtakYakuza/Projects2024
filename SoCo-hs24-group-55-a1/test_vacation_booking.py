@@ -205,6 +205,8 @@ def run_tests():
     results = {"pass": 0, "fail": 0, "error": 0}
     print(f"{Style.BRIGHT}{Fore.CYAN}\n{'-'*30}\nRunning Tests\n{'-'*30}{Style.RESET_ALL}")
     test_functions = [(name, test) for (name, test) in globals().items() if name.startswith("test_")]
+    if select_pattern:
+        test_functions = [(name, test) for name, test in test_functions if select_pattern.lower() in name.lower()]
     for name, test in test_functions:
         start_time = time.time()
         setUp()                        
