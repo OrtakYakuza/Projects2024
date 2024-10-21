@@ -4,23 +4,26 @@ started with setting up our repository and adding the required folders/files + a
 encountered some difficulties adding a folder which led to our first ChatGPT Prompt: How to create a Folder in GitLab
 looked at branches and commits/merging together so that everyone is on the same page, here we encountered difficulties with merging conflicts -> ChatGPT Prompt: Merge conflicts and how to solve them per terminal
 
-started working on Step1 by splitting up the classes between ourselves 
+created our first branch besides main called "parent class" where we defined our parent class called VacationPackage
+started working on Step1 by splitting up the classes between ourselves and creating seperate branches for them (AdventureTrip, LuxuryCruise, BeachResort)
 Kept getting Recursion Errors on first commit on Nikolanew and had to ask ChatGPT with a copy of the code: why do I keep getting Recursion Errors
-tentatively finished our classes and merged them into the main branch + created make_function that works with respectively each class
+tentatively finished our classes and merged them into the main branch where we encountered some merge conflicts that we solved respectively, additionaly created make_function on a new branch that works with respectively each class
 
 08.10.24 
-
-made some minor corrections to our main class
-merged the make_function with the main class
+made some minor corrections to our main class withhin our subclasses
+merged the make_function branch with the main class, which caused a merge issue that was fixed
 added missing functions to the make_function
 added some test calls to see if the code works
 
 09.10.24 
 
 removed the prior added functions from make_function as we realized our other method was not ideal
-made a find/call function as this is a better way 
+and that a find/call function would be better
+therefore we made a new branch with out find/call function that we then merged together with our main branch
 
-Since we implented the find and call function, we implemented the calculate total cost and the extract total vacation summary, by creating a list (booked_holidays) and iterating over it using the call function to call calculate_cost and describe_package functions and appending them to a new list, which is summed for the cost and returned in the summary function.
+
+Since we implented the find and call function and therefore finished step1 we moved forward to step2 with the VacationBookingSummary class
+we implemented the calculate total cost and the extract total vacation summary, by creating a list (booked_holidays) and iterating over it using the call function to call calculate_cost and describe_package functions and appending them to a new list, which is summed for the cost and returned in the summary function.
 
 we adjusted the functions to be directly connected to the the VacationBookingSummary so when a  instance is created it checks the search term which  has to be in ["_class"]["_classname"] and from there it utilizes the functions depending if the search term is None or "something".
 
@@ -31,7 +34,7 @@ addtionally we brainstormed ideas seperately how we would go on about solving st
 
 18.10.24
 
-we decided to first implement the test cases we wanted to do by splitting them among us three
+we decided to first implement the test cases we wanted to do by splitting them among us three by creating different branches 
 
 first batch of test: 
 test_beach_resort_calculate_cost_without_surfing(),test_beach_resort_calculate_cost_with_surfing(),test_adventure_trip_calculate_cost_easy(),test_adventure_trip_calculate_cost_hard(),test_luxury_cruise_calculate_cost_without_suite(),test_luxury_cruise_calculate_with_suite()
@@ -45,7 +48,7 @@ the third batch of tests:
 test_vacation_booking_summary_totalcost(), test_vacation_booking_summary(), test_vacation_booking_summary_AdventureTrip_totalcost(),test_vacation_booking_summary_AdventureTrip(), test_vacation_booking_summary_BeachResort_totalcost(), test_vacation_booking_summary_BeachResort(), test_vacation_booking_summary_LuxuryCruise_totalcost(),test_vacation_booking_summary_LuxuryCruise()
 --> these test make sure that the vacation booking summaries are correctly produced whether that is a description or calculating the costs. the test include making a summary when no searchword is defined or when a searchword for a specific package is defined
 
-addtionally implemented some tests for specific edge cases:
+addtionally implemented some tests for specific edge cases on a new branch:
 
 test_adventure_trip_negative_cost
 -> as there is no such thing as negative cost here we want to make sure that when a package is created with negative cost a value error is raised. here we test this by trying to make a vacation with negative cost
@@ -68,17 +71,23 @@ test_invalid_package()
 test_invalid_searchterm()
 -> we only have 3 valid classes for which the vacation booking summary classes should work if one uses a searchterm not related to our classes a value error should be raised which is what this test does. it does this by trying to make a vacation summary with an invalid searchterm
 
-After writing the tests one of us went through all of the tests to rename and restructurize, so that theyre now organized.
-for the time we researched about the time.time() function 
-we didnt know how to implement the select pattern functionality so we asked chatgpt: how to implement a select pattern through terminal for running tests. Then we decided to use the sys.argv which is quite understandable. Additionally we used ChatGPT go get an easier understanding of the colorama documentation with the Prompt:"how do i modify the terminal output using colorama, give me an overview of the syntax". we also changed ({time.time() - start_time:.2f} to ({time.time() - start_time:.5f} so one can see the runtime better.
+after writing the tests and merging them together one of us went through all of the tests to rename and restructurize, so that theyre now organized
+
+for the time we researched about the time.time() function which we then implemented
+
+we didnt know how to implement the select pattern functionality so we researched and asked chatgpt: how to implement a select pattern through terminal for running tests. with the given information we decided to use the sys.argv to implement our solution which is quite understandable.
+
+additionally we used ChatGPT go get an easier understanding of the colorama documentation with the Prompt:"how do i modify the terminal output using colorama, give me an overview of the syntax"
 
 19.10.24
-implemented some "defensive coding" so that errors are raised with incorrect values and tests also work accordingly
+implemented some "defensive coding" in our vacation_booking.py file so that errors are raised with incorrect values and tests also work accordingly
 
 20.10.24
-ran into problems with edge case tests which we solved together
-tried to implement the set up/tear down function that needs to be improved
+ran into problems with our edge case testing which we solved together and then merged to the main branch with solving the merge issue
+tried to implement the set up/tear down function that needs to be improved and realized that our tests for the vacation booking summary does not function properly
 
 21.10.24
 fixed the tests for vacation summary as they were not working correctly before and fixed our set up/tear down function
+we also changed ({time.time() - start_time:.2f} to ({time.time() - start_time:.5f} so one can see the runtime better
+now our test function was working properly as needed which mean we went through all the steps!
 we finalized our assignment with a 3 hour call where we went throught the code and tests together to make sure everything works how we want it to
