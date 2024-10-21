@@ -70,7 +70,7 @@ test_invalid_searchterm()
 
 After writing the tests one of us went through all of the tests to rename and restructurize, so that theyre now organized.
 for the time we researched about the time.time() function 
-we didnt know how to implement the select pattern functionality so we asked chatgpt: how to implement a select pattern through terminal for running tests. Then we decided to use the sys.argv which is quite understandable
+we didnt know how to implement the select pattern functionality so we asked chatgpt: how to implement a select pattern through terminal for running tests. Then we decided to use the sys.argv which is quite understandable. Additionally we used ChatGPT go get an easier understanding of the colorama documentation with the Prompt:"how do i modify the terminal output using colorama, give me an overview of the syntax". we also changed ({time.time() - start_time:.2f} to ({time.time() - start_time:.5f} so one can see the runtime better.
 
 19.10.24
 implemented some "defensive coding" so that errors are raised with incorrect values and tests also work accordingly
