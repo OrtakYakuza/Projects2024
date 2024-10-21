@@ -142,6 +142,7 @@ beach_resort1 = make(BeachResort, "Maldives", 100, 7, True)
 adventure_trip1 = make(AdventureTrip, "Macchu Picchu", 150, 4, "easy")  #these are in the Booked_holidays List
 luxury_cruise1 = make(LuxuryCruise, "Mediterranean", 100, 14, True)
 
+
 def calculate_total_cost():
     total_price = []
     if VacationBookingSummary["search_term"] is None:
