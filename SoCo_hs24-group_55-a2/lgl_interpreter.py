@@ -53,29 +53,23 @@ def do_func(envs_stack, args):
 
 
 def do_call(envs_stack, args):
-    
-    
     assert len(args) >= 1
     assert isinstance(args[0], str)
-    func_name = args[0]  
-    arguments = [do(envs_stack, a) for a in args[1:]]  
-
-    
+    func_name = args[0]
+    arguments = [do(envs_stack, a) for a in args[1:]]
     func = get_from_envs_stack(envs_stack, func_name)
     assert isinstance(func, list) and func[0] == "func", \
-            f"{func_name} is not a function!"
-    params = func[1]  
-    body = func[2]  
+        f"{func_name} is not a function!"
+    params = func[1]
+    body = func[2]
     assert len(arguments) == len(params), \
-            f"{func_name} 
-    
-
+        f"{func_name} receives a different number of parameters"
     local_env = dict(zip(params, arguments))
     envs_stack.append(local_env)
     result = do(envs_stack, body)
     envs_stack.pop()
-
     return result
+
 
 
 def set_in_envs_stack(envs_stack, name, value):
