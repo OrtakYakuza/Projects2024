@@ -68,9 +68,9 @@ def do_call(envs_stack, args):
     body = func[2]  
     assert len(arguments) == len(params), \
             f"{func_name} 
-    local_env = dict(zip(params, arguments))
-
     
+
+    local_env = dict(zip(params, arguments))
     envs_stack.append(local_env)
     result = do(envs_stack, body)
     envs_stack.pop()
