@@ -32,9 +32,6 @@ def do_setzen(envs_stack, args):
     assert isinstance(args[0], str)
     var_name = args[0]
     value = do(envs_stack, args[1])
-    # previous version:
-    # env[var_name] = value
-    # new version with stack of environments
     set_in_envs_stack(envs_stack, var_name, value)
     return value
 
@@ -60,8 +57,8 @@ def do_call(envs_stack, args):
     
     assert len(args) >= 1
     assert isinstance(args[0], str)
-    func_name = args[0]  # "add_two"
-    arguments = [do(envs_stack, a) for a in args[1:]]  # [3, 2]
+    func_name = args[0]  
+    arguments = [do(envs_stack, a) for a in args[1:]]  
 
     
     func = get_from_envs_stack(envs_stack, func_name)
@@ -87,9 +84,7 @@ def set_in_envs_stack(envs_stack, name, value):
     assert isinstance(name, str)
     for each_env in reversed(envs_stack):
         if name in each_env:
-            # update the found variable
             each_env[name] = value
-            # and exit
             return
     top_environment = envs_stack[-1]
     top_environment[name] = value
