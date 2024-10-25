@@ -20,6 +20,7 @@ def do_sequenz(envs_stack, args):
     result = None
     for expr in args:
         result = do(envs_stack, expr)
+        print(f"Result of expression {expr}: {result}")
     return result
 
 
@@ -127,22 +128,27 @@ def get_from_envs_stack(envs_stack, name):
 
 
 def do(envs_stack, expr):
-    """
-    Executes the given expression
-    """
+
     if isinstance(expr, int):
         return expr
-    elif isinstance(expr, str):
+
+    if isinstance(expr, str):
         return get_from_envs_stack(envs_stack, expr)
-    # Check for infix-style operation [left_operand, operator, right_operand]
-    if isinstance(expr, list) and len(expr) == 3:
-        if expr[1] in OPS:
-            args = [expr[0], expr[2]]  # Pack left and right operands as args
-            return OPS[expr[1]](envs_stack, args)
-    assert isinstance(expr, list)
-    assert expr[0] in OPS, f"Unknown operation {expr[0]}"
-    operation = OPS[expr[0]]
-    return operation(envs_stack, expr[1:])
+    
+    if isinstance(expr, list) and len(expr) == 1:
+        return do(envs_stack, expr[0])
+    
+    if isinstance(expr, list) and len(expr) == 3 and isinstance(expr[1], str):
+        operator = expr[1]
+        args = [expr[0], expr[2]]
+        assert operator in OPS, f"Unknown operation {operator}"
+        return OPS[operator](envs_stack, args)
+    
+    if isinstance(expr, list) and expr[0] in OPS:
+        operation = OPS[expr[0]]
+        return operation(envs_stack, expr[1:])
+    
+    raise ValueError(f"Invalid expression format: {expr}")
 
 
 OPS = {
@@ -152,19 +158,20 @@ OPS = {
 }
 
 symbol_to_name = {
-    "+": "add",
-    "-": "subtract",
+    "+": "plus",
+    "-": "minus",
     "*": "multiply",
     "/": "divide",
     "AND": "and",
     "OR": "or",
     "XOR": "xor"
 }
+
 OPS.update({symbol: OPS[name] for symbol, name in symbol_to_name.items() if name in OPS})
 
 def main():
     program = ""
-    assert len(sys.argv) == 2, "usage: python lgl_interpreter.py example_infix.gsc"
+    assert len(sys.argv) == 2, "usage: python lgl_interpreter.py example_infix2.txt"
     with open(sys.argv[1], "r") as source:
         program = json.load(source)
     envs_stack = []  
@@ -174,5 +181,5 @@ def main():
     print(result)
 
 
-if _name_ == "_main_":
+if __name__ == "__main__":
     main()
