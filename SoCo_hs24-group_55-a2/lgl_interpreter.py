@@ -138,15 +138,16 @@ def do(envs_stack, expr):
     if isinstance(expr, list) and len(expr) == 1:
         return do(envs_stack, expr[0])
     
+    if isinstance(expr, list) and expr[0] in OPS:
+        operation = OPS[expr[0]]
+        return operation(envs_stack, expr[1:])
+
     if isinstance(expr, list) and len(expr) == 3 and isinstance(expr[1], str):
         operator = expr[1]
         args = [expr[0], expr[2]]
         assert operator in OPS, f"Unknown operation {operator}"
         return OPS[operator](envs_stack, args)
-    
-    if isinstance(expr, list) and expr[0] in OPS:
-        operation = OPS[expr[0]]
-        return operation(envs_stack, expr[1:])
+
     
     raise ValueError(f"Invalid expression format: {expr}")
 
@@ -178,7 +179,6 @@ def main():
     global_environment = {} 
     envs_stack.append(global_environment)
     result = do(envs_stack, program)
-    print(result)
 
 
 if __name__ == "__main__":
