@@ -3,7 +3,6 @@ import json
 
 
 def do_addieren(envs_stack, args):
-    
     assert len(args) == 2
     left = do(envs_stack, args[0])
     right = do(envs_stack, args[1])
@@ -11,23 +10,21 @@ def do_addieren(envs_stack, args):
 
 
 def do_betrag(envs_stack, args):
-    
     assert len(args) == 1
     val = do(envs_stack, args[0])
     return abs(val)
 
 
 def do_sequenz(envs_stack, args):
-    
     assert len(args) > 0
     result = None
     for expr in args:
         result = do(envs_stack, expr)
+        print(f"Result of expression {expr}: {result}")
     return result
 
 
 def do_setzen(envs_stack, args):
-
     assert len(args) == 2
     assert isinstance(args[0], str)
     var_name = args[0]
@@ -37,19 +34,60 @@ def do_setzen(envs_stack, args):
 
 
 def do_bekommen(envs_stack, args):
-
     assert len(args) == 1
     assert isinstance(args[0], str)
     value = get_from_envs_stack(envs_stack, args[0])
     return value
 
+def do_and(envs_stack, args):
+    assert len(args) == 2
+    left = do(envs_stack, args[0])
+    right = do(envs_stack, args[1])
+    return 1 if left and right else 0
+
+def do_or(envs_stack, args):
+    assert len(args) == 2
+    left = do(envs_stack, args[0])
+    right = do(envs_stack, args[1])
+    return 1 if left or right else 0
+
+def do_xor(envs_stack, args):
+    assert len(args) == 2
+    left = do(envs_stack, args[0])
+    right = do(envs_stack, args[1])
+    return 1 if (left and not right) or (not left and right) else 0
+
+def do_plus(envs_stack, args):
+    assert len(args) == 2
+    left = do(envs_stack, args[0])
+    right = do(envs_stack, args[1])
+    return left + right
+
+def do_minus(envs_stack, args):
+    assert len(args) == 2
+    left = do(envs_stack, args[0])
+    right = do(envs_stack, args[1])
+    return left - right
+
+def do_multiply(envs_stack, args):
+    assert len(args) == 2
+    left = do(envs_stack, args[0])
+    right = do(envs_stack, args[1])
+    return left * right
+
+def do_divide(envs_stack, args):
+    assert len(args) == 2
+    left = do(envs_stack, args[0])
+    right = do(envs_stack, args[1])
+    assert right != 0, "not possible"
+    return left / right
 
 def do_func(envs_stack, args):
-      
     assert len(args) == 2
     parameters = args[0]
     body = args[1]
-    return ["func", parameters, body]
+    func_snap_env = envs_stack.copy()                  #
+    return ["func", parameters, body, func_snap_env]     # these two changed
 
 
 def do_call(envs_stack, args):
@@ -62,30 +100,27 @@ def do_call(envs_stack, args):
         f"{func_name} is not a function!"
     params = func[1]
     body = func[2]
-    assert len(arguments) == len(params), \
-        f"{func_name} receives a different number of parameters"
-    local_env = dict(zip(params, arguments))
-    envs_stack.append(local_env)
-    result = do(envs_stack, body)
-    envs_stack.pop()
+    func_snap_env = func[3]                         #
+    assert len(arguments) == len(params), f"{func_name} receives a different number of parameters"
+    
+    local_env = dict(zip(params, arguments))                
+    call_env_stack = func_snap_env + [local_env]            #
+    result = do(call_env_stack, body)                       # these 3 changed
     return result
 
 
-
 def set_in_envs_stack(envs_stack, name, value):
-    
-    
     assert isinstance(name, str)
-    for each_env in reversed(envs_stack):
-        if name in each_env:
-            each_env[name] = value
-            return
-    top_environment = envs_stack[-1]
-    top_environment[name] = value
+
+    if len(envs_stack) > 1:                ##this func changed so it dosnt itaerate over the "envs", but rather local env, if not found -> global env
+        envs_stack[-1][name] = value
+    else:
+        top_environment = envs_stack[0]
+        top_environment[name] = value
+
 
 
 def get_from_envs_stack(envs_stack, name):
-
     assert isinstance(name, str)
     for each_env in reversed(envs_stack):
         if name in each_env:
@@ -93,14 +128,31 @@ def get_from_envs_stack(envs_stack, name):
     assert False, f"Name {name} not found"
 
 
+
 def do(envs_stack, expr):
+
+
     if isinstance(expr, int):
         return expr
-    assert isinstance(expr, list)
-    assert expr[0] in OPS, f"Unknown operation {expr[0]}"
-    operation = OPS[expr[0]]
-    return operation(envs_stack, expr[1:])
 
+    if isinstance(expr, str):
+        return get_from_envs_stack(envs_stack, expr)
+    
+    if isinstance(expr, list) and len(expr) == 1:
+        return do(envs_stack, expr[0])
+    
+    if isinstance(expr, list) and expr[0] in OPS:
+        operation = OPS[expr[0]]
+        return operation(envs_stack, expr[1:])
+
+    if isinstance(expr, list) and len(expr) == 3 and isinstance(expr[1], str):
+        operator = expr[1]
+        args = [expr[0], expr[2]]
+        assert operator in OPS, f"Unknown operation {operator}"
+        return OPS[operator](envs_stack, args)
+
+    
+    raise ValueError(f"Invalid expression format: {expr}")
 
 
 OPS = {
@@ -109,17 +161,27 @@ OPS = {
     if name.startswith("do_")
 }
 
+symbol_to_name = {
+    "+": "plus",
+    "-": "minus",
+    "*": "multiply",
+    "/": "divide",
+    "AND": "and",
+    "OR": "or",
+    "XOR": "xor"
+}
+
+OPS.update({symbol: OPS[name] for symbol, name in symbol_to_name.items() if name in OPS})
 
 def main():
     program = ""
-    assert len(sys.argv) == 2, 
+    assert len(sys.argv) == 2, "usage: python lgl_interpreter.py example_scoping.gsc"
     with open(sys.argv[1], "r") as source:
         program = json.load(source)
     envs_stack = []  
     global_environment = {} 
-    envs_stack.append(global_environment) 
+    envs_stack.append(global_environment)
     result = do(envs_stack, program)
-    print(result)
 
 
 if __name__ == "__main__":
