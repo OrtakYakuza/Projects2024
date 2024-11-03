@@ -209,7 +209,8 @@ def main():
 
     if "--trace" in sys.argv:
         trace_enabled = True
-        trace_file_path = sys.argv[4] # use index of the file path
+        trace_index = sys.argv.index("--trace")
+        trace_file_path = sys.argv[trace_index + 1] # use index of the file path
 
     if trace_enabled and trace_file_path:
         for name, func in OPS.items():
