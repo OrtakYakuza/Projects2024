@@ -1,6 +1,7 @@
 import csv
 from datetime import datetime
 import sys
+from colorama import Fore, Style, init
 
 
 def reporting_all(file_path):
@@ -41,15 +42,14 @@ def reporting_all(file_path):
 
 
 def display_report(report_data):
-    header = "| Function Name | Num. of calls | Total Time (ms) | Average Time (ms) |"
+    header = f"{Fore.BLUE}{Fore.WHITE}|{Fore.BLUE} Function Name       {Fore.WHITE}|{Fore.BLUE} Num. of calls {Fore.WHITE}|{Fore.BLUE} Total Time (ms) {Fore.WHITE}|{Fore.BLUE} Average Time (ms) {Fore.WHITE}|{Style.RESET_ALL}"
     separator = "-" * len(header)
     print(header)
     print(separator)
 
     for entry in report_data:
         function_name, calls, total_time, average_time = entry
-        print(f"| {function_name:<18} | {calls:^14} | {total_time:^15.2f} | {average_time:^18.2f} |")
-        ## the numbers are the len of characters
+        print(f"{Fore.WHITE}| {Fore.GREEN}{function_name:<18} {Fore.WHITE}| {Fore.YELLOW}{calls:^14} {Fore.WHITE}| {Fore.RED}{total_time:^15.2f} {Fore.WHITE}| {Fore.MAGENTA}{average_time:^18.2f} {Fore.WHITE}|")
 
     print(separator)
 
