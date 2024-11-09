@@ -86,7 +86,8 @@ def do_func(envs_stack, args):
     assert len(args) == 2
     parameters = args[0]
     body = args[1]
-    return ["func", parameters, body]
+    func_snap_env = envs_stack.copy()                  #
+    return ["func", parameters, body, func_snap_env]     # these two changed
 
 
 def do_call(envs_stack, args):
@@ -99,24 +100,24 @@ def do_call(envs_stack, args):
         f"{func_name} is not a function!"
     params = func[1]
     body = func[2]
-    assert len(arguments) == len(params), \
-        f"{func_name} receives a different number of parameters"
-    local_env = dict(zip(params, arguments))
-    envs_stack.append(local_env)
-    result = do(envs_stack, body)
-    envs_stack.pop()
+    func_snap_env = func[3]                         #
+    assert len(arguments) == len(params), f"{func_name} receives a different number of parameters"
+    
+    local_env = dict(zip(params, arguments))                
+    call_env_stack = func_snap_env + [local_env]            #
+    result = do(call_env_stack, body)                       # these 3 changed
     return result
-
 
 
 def set_in_envs_stack(envs_stack, name, value):
     assert isinstance(name, str)
-    for each_env in reversed(envs_stack):
-        if name in each_env:
-            each_env[name] = value
-            return
-    top_environment = envs_stack[-1]
-    top_environment[name] = value
+
+    if len(envs_stack) > 1:                ##this func changed so it dosnt itaerate over the "envs", but rather local env, if not found -> global env
+        envs_stack[-1][name] = value
+    else:
+        top_environment = envs_stack[0]
+        top_environment[name] = value
+
 
 
 def get_from_envs_stack(envs_stack, name):
@@ -129,6 +130,7 @@ def get_from_envs_stack(envs_stack, name):
 
 
 def do(envs_stack, expr):
+
 
     if isinstance(expr, int):
         return expr
@@ -173,7 +175,7 @@ OPS.update({symbol: OPS[name] for symbol, name in symbol_to_name.items() if name
 
 def main():
     program = ""
-    assert len(sys.argv) == 2, "usage: python lgl_interpreter.py example_infix2.txt"
+    assert len(sys.argv) == 2, "usage: python lgl_interpreter.py example_scoping.gsc"
     with open(sys.argv[1], "r") as source:
         program = json.load(source)
     envs_stack = []  
