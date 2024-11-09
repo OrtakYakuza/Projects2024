@@ -19,3 +19,7 @@ made some minor corrections to our infix operator implementation, more specifica
 now that step1 is tentatively completed we started with step2 which is implementing lexical scoping
 
 01.11.24
+
+09.11.24
+
+finished the reporting.py file to transform the trace_file-log to a table and make it look nicer and have a better overview. Additionally added colorama for optics
