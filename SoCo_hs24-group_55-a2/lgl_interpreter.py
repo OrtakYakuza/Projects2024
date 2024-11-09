@@ -1,5 +1,33 @@
 import sys
 import json
+from datetime import datetime
+
+trace_file_path = None  # store the trace file path
+trace_enabled = False  
+unique_id_counter = 100000 
+
+def generate_unique_id():
+    global unique_id_counter
+    unique_id_counter += 1
+    return unique_id_counter
+
+def decorator(file_path):
+    def trace(func):
+        def wrap(*args, **kwargs):
+            unique_id = generate_unique_id() 
+            timestamp_start = datetime.now()
+            with open(file_path, 'a') as f:
+                f.write(f"{unique_id},{timestamp_start},{func.__name__},start\n")
+            
+            result = func(*args, **kwargs)  # Call the actual function
+            
+            timestamp_end = datetime.now()
+            with open(file_path, 'a') as f:
+                f.write(f"{unique_id},{timestamp_end},{func.__name__},stop\n")
+            return result
+        return wrap
+    return trace
+
 
 
 def do_addieren(envs_stack, args):
@@ -174,10 +202,23 @@ symbol_to_name = {
 OPS.update({symbol: OPS[name] for symbol, name in symbol_to_name.items() if name in OPS})
 
 def main():
+    global trace_enabled, trace_file_path
     program = ""
-    assert len(sys.argv) == 2, "usage: python lgl_interpreter.py example_scoping.gsc"
+
+    assert len(sys.argv) >= 2, "usage: python lgl_interpreter.py example.gsc --trace trace_file.log"
+
+    if "--trace" in sys.argv:
+        trace_enabled = True
+        trace_index = sys.argv.index("--trace")
+        trace_file_path = sys.argv[trace_index + 1] # use index of the file path
+
+    if trace_enabled and trace_file_path:
+        for name, func in OPS.items():
+            OPS[name] = decorator(trace_file_path)(func) # put decorator on every function
+
     with open(sys.argv[1], "r") as source:
         program = json.load(source)
+
     envs_stack = []  
     global_environment = {} 
     envs_stack.append(global_environment)
@@ -186,4 +227,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
