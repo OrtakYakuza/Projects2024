@@ -30,7 +30,9 @@ we wrote both a lgl file that demonstrate the lexical scoping in general and one
 
 03.11.24
 
-##logging function
+started working on logging file by consulting the book
+did this by creating a function that generates a unique id and a decorator 
+in the main function these are then accordingly so that we are able to access them with --trace
 
 
 08.11.24
@@ -41,7 +43,12 @@ the csv.reader reads the file row by row. each row has four fields id, timestamp
 to turn timestamp to timestamp_ms we used the the datetime libary with which we needed some help from AI for the datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S.%f')
 the report_data list created by reporting_all() is then passed to display_report() which isnt finished yet
 
-
 09.11.24
 
 finished the reporting.py file to transform the trace_file-log to a table and make it look nicer and have a better overview. Additionally added colorama for optics
+merged all branches into main and corrected merge conflicts when needed
+
+10.11.24
+
+made minor correction to our reporting.py so that more decimal points are printed
+added an print statement to the logging which displays "id,timestamp,function_name,event" at the top
