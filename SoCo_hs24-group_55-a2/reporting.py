@@ -49,7 +49,7 @@ def display_report(report_data):
 
     for entry in report_data:
         function_name, calls, total_time, average_time = entry
-        print(f"{Fore.WHITE}| {Fore.GREEN}{function_name:<18} {Fore.WHITE}| {Fore.YELLOW}{calls:^14} {Fore.WHITE}| {Fore.RED}{total_time:^15.2f} {Fore.WHITE}| {Fore.MAGENTA}{average_time:^18.2f} {Fore.WHITE}|")
+        print(f"{Fore.WHITE}| {Fore.GREEN}{function_name:<18} {Fore.WHITE}| {Fore.YELLOW}{calls:^14} {Fore.WHITE}| {Fore.RED}{total_time:^15.3f} {Fore.WHITE}| {Fore.MAGENTA}{average_time:^18.3f} {Fore.WHITE}|")
 
     print(separator)
 
