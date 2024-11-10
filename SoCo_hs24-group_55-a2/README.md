@@ -51,4 +51,4 @@ merged all branches into main and corrected merge conflicts when needed
 10.11.24
 
 made minor correction to our reporting.py so that more decimal points are printed
-added an print statement to the logging which displays "id,timestamp,function_name,event" at the top
+reviewed everything together by going through the steps together and reviewing the code
