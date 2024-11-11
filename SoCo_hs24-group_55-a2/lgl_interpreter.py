@@ -11,12 +11,19 @@ def generate_unique_id():
     unique_id_counter += 1
     return unique_id_counter
 
+header_written = False
+
 def decorator(file_path):
     def trace(func):
         def wrap(*args, **kwargs):
+            global header_written 
             unique_id = generate_unique_id() 
             timestamp_start = datetime.now()
             with open(file_path, 'a') as f:
+                if not header_written:
+                    f.write("id,timestamp,function_name,event\n")
+                    header_written = True
+                    
                 f.write(f"{unique_id},{timestamp_start},{func.__name__},start\n")
             
             result = func(*args, **kwargs)  # Call the actual function
