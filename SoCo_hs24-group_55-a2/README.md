@@ -44,4 +44,8 @@
 
 ### 10.11.24  
 - Minor formatting adjustments in `reporting.py` for additional decimal precision.
+- Conducted a code review as a group, revisiting each step and verifying the overall functionality.
+
+### 11.11.24 
+- added header for `trace_file.log` and additionally adjusted `reporting.py` to read new `trace_file.log` accordingly
 - Conducted a final code review as a group, revisiting each step and verifying the overall functionality.
