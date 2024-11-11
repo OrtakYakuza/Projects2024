@@ -9,6 +9,7 @@ def reporting_all(file_path):
 
     with open(file_path, 'r') as f:
         reader = csv.reader(f)  # shows file in csv form for the row based format we need in our tracing
+        next(reader)
         start_times = {}
 
         for row in reader:
