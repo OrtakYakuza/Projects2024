@@ -1,1 +1,1 @@
-git@gitlab.uzh.ch:zara.ahmed/soco-hs24-group-55-a2.git
+git@gitlab.uzh.ch:zara.ahmed/soco-hs24-group-55-a1.git
