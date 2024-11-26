@@ -53,6 +53,44 @@ def copy_files(source_dir,backup_dir,manifest): # check which files need to be c
         if not backup_path.exists(): # changes of content --> changes hash codes
             shutil.copy(source_path,backup_path) # copy
 
+def log(n=5):
+    tig_dir = Path(".tig")
+    commits_dir = tig_dir / "commits"
+
+    if not tig_dir.exists():
+        print("No tig repository!")
+        return
+
+    if not commits_dir.exists() or not any(commits_dir.iterdir()):
+        print("No commits found!")
+        return
+
+    commit_folders = sorted(commits_dir.iterdir(),key=lambda folder: int(folder.name.split("_")[1]),reverse=True)
+    #sort commit folders by retriving them and sorting them by their id which her is transformed into an int
+
+    n = int(n)
+    recent_commits = commit_folders[:n]
+
+    print(f"Displaying the last {len(recent_commits)} commits:\n")
+
+    for commit_folder in recent_commits:
+        info_file = commit_folder / "info.txt"
+        if not info_file.exists():
+            print(f"Missing info.txt in {commit_folder.name}")
+            continue
+
+        with open(info_file, "r") as file:
+            lines = file.readlines()
+
+        commit_id = lines[0].split(":")[1].strip()  #id
+        commit_date = lines[1].split(":")[1].strip()  #date
+        commit_message = lines[2].split(":")[1].strip()  # message
+
+        print(f"Commit ID: {commit_id}")
+        print(f"Date: {commit_date}")
+        print(f"Message: {commit_message}")
+        print("-" * 30)
+
 #if __name__ == "__main__":
 #    assert len(sys.argv) == 3, "Usage: backup.py source_dir dest_dir"
 #    source_dir = sys.argv[1]
