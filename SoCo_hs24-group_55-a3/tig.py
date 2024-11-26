@@ -71,9 +71,7 @@ def diff(filename):
     result = difflib.unified_diff( # used automatic library function
     committed_content,
     current_content,
-    fromfile=f"committed/{filename}",
-    tofile=f"working/{filename}",
-    lineterm="")
+    lineterm="\n")
     
     print(result)
 
