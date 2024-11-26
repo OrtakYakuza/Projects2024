@@ -53,6 +53,30 @@ def copy_files(source_dir,backup_dir,manifest): # check which files need to be c
         if not backup_path.exists(): # changes of content --> changes hash codes
             shutil.copy(source_path,backup_path) # copy
 
+def diff(filename):
+    commits_dir = Path(".tig/commits") #go to commits folder
+    latest_commit = sorted(commits_dir.iterdir(), reverse=True)[0] # sort the folders in the commits and take the last commited one
+    manifest_file = latest_commit / "manifest.csv" # take the manifest file in the commit folder
+    with open(manifest_file, "r") as f:
+        manifest = dict(line.strip().split(",") for line in f.readlines()[1:]) # read the manifest file to find the committed_file through hash 
+    
+    committed_file = latest_commit / manifest[filename] 
+
+    with open(committed_file, "r") as f: 
+        committed_content = f.readlines()
+
+    with open(filename, "r") as f:
+        current_content = f.readlines()
+
+    result = difflib.unified_diff( # used automatic library function
+    committed_content,
+    current_content,
+    fromfile=f"committed/{filename}",
+    tofile=f"working/{filename}",
+    lineterm="")
+    
+    print(result)
+
 #if __name__ == "__main__":
 #    assert len(sys.argv) == 3, "Usage: backup.py source_dir dest_dir"
 #    source_dir = sys.argv[1]
