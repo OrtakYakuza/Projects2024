@@ -383,10 +383,30 @@ def checkout(commit_id):
 
     print(f"Checkout to commit '{commit_id}' completed.")
 
-#if __name__ == "__main__":
-#    assert len(sys.argv) == 3, "Usage: backup.py source_dir dest_dir"
-#    source_dir = sys.argv[1]
-#    dest_dir = sys.argv[2]
-#    backup(source_dir,dest_dir)
+commands = {
+    "init": init,
+    "add": add_file,
+    "commit": commit,
+    "log": log
+    "status": status,
+    "diff": diff,
+    "checkout": checkout
+}
+
+if __name__ == "__main__":
+    if len(sys.argv) < 2:
+        print("Usage: python tig.py <command> [arguments]")
+        sys.exit(1)
+
+    command = sys.argv[1]
+    args = sys.argv[2:]
+    # by creating this dict of commands we can check for incorrect usage without always appending a whole if statement for new functions
+    if command in commands:
+        try:
+            commands[command](*args)
+        except TypeError:
+            print(f"Error: Incorrect usage of '{command}' command.")
+    else:
+        print(f"Unknown command: {command}")
 
 
