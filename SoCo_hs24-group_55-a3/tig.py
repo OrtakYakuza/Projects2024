@@ -1,5 +1,3 @@
-# backup is a process of copying data to a separate location to ensure its preserved and can be restored
-
 import sys
 import os
 import time
@@ -52,6 +50,21 @@ def copy_files(source_dir,backup_dir,manifest): # check which files need to be c
         backup_path = Path(backup_dir,hash_code) # /Users/sback/soco_bkp2/0b8e6c43ac411146
         if not backup_path.exists(): # changes of content --> changes hash codes
             shutil.copy(source_path,backup_path) # copy
+
+def init(directory):
+    dir_path = Path(directory)  # create path to chosen directory
+    tig_dir = dir_path / ".tig"  # create path to wanted tig file
+
+    # defensive programming
+    if not dir_path.exists():
+        print(f"The directory '{directory}' does not exist!")
+        return
+
+    if tig_dir.exists():
+        print(f"A .tig repository already exists in '{directory}'!")
+        return
+
+    tig_dir.mkdir() # create the tig folder
 
 #if __name__ == "__main__":
 #    assert len(sys.argv) == 3, "Usage: backup.py source_dir dest_dir"
