@@ -1,7 +1,15 @@
-# create a directory with two folders: 
 def init(directory):
-    tig_directory = Path(directory) / ".tig"
-    if not tig_directory.exists():
-        tig_directory.mkdir()
-        (tig_directory / "staged").mkdir() # staged: for all files ready to be commited
-        (tig_directory / "commits").mkdir() # commits: folders of commits
+    dir_path = Path(directory)  # create path to chosen directory
+    tig_dir = dir_path / ".tig"  # create path to wanted tig file
+
+    # defensive programming
+    if not dir_path.exists():
+        print(f"The directory '{directory}' does not exist!")
+        return
+
+    if tig_dir.exists():
+        print(f"A .tig repository already exists in '{directory}'!")
+        return
+
+    tig_dir.mkdir()
+    # create the tig folder
