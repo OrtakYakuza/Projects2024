@@ -389,6 +389,13 @@ def checkout(commit_id):
         file_data = {row[0]: row[1] for row in reader}
 
 
+    for item in Path(".").iterdir():
+        if item.is_file() and not item.name.startswith(".tig"):
+            item.unlink()  
+        elif item.is_dir() and item.name != ".tig":
+            shutil.rmtree(item)
+
+
     for filename, file_hash in file_data.items():
         source_path = commit_folder / filename
         dest_path = Path(filename)
