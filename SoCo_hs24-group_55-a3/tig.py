@@ -387,7 +387,7 @@ commands = {
     "init": init,
     "add": add_file,
     "commit": commit,
-    "log": log
+    "log": log,
     "status": status,
     "diff": diff,
     "checkout": checkout
