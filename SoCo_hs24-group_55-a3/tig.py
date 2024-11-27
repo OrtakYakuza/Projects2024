@@ -1,10 +1,13 @@
-import sys
 import os
-import time
+import sys
 import shutil
-from glob import glob
-from pathlib import Path
 from hashlib import sha256
+import time
+from datetime import datetime
+from pathlib import Path
+import csv
+import uuid
+from glob import glob
 
 # hash is a mathematical function that given an input it gives a unique output / identifier for input and it shows where data is stored in a hash table
 HASH_LEN = 16
@@ -42,7 +45,6 @@ def write_manifest(backup_dir,timestamp,manifest): # create a file with content 
         f.write("filename,hash"+"\n")
         for filename,hash_code in manifest: # manifest has a tuple (filename,hashcode)
             f.write(filename + "," + hash_code + "\n")
-
 
 def copy_files(source_dir,backup_dir,manifest): # check which files need to be copied
     for (filename,hash_code) in manifest: # helo.txt, 0b8e6c43ac411146
@@ -103,6 +105,89 @@ def add_file(filename):
 
     #append the filename and hash to the index
     print(f"Added '{filename}' to staging area.")
+
+#had to write this function because we were struggling with the naming of the commit folders in commits
+#and it was cleaner this way than to put it in the commit function itself
+
+def get_next_commit_id():
+    tig_dir = Path(".tig")
+    last_commit_file = tig_dir / "last_commit_id"
+
+    #check for last commit id
+    if not last_commit_file.exists():
+        with open(last_commit_file, "w") as f:
+            f.write("0")  # Start with 0
+
+    with open(last_commit_file, "r") as f:
+        last_id = int(f.read().strip())
+
+    next_id = last_id + 1
+
+    #save
+    with open(last_commit_file, "w") as f:
+        f.write(str(next_id))
+
+    return f"commit_{next_id:04d}"  #formats id as commit_0001, commit_0002...
+
+def commit(commit_message):
+    tig_dir = Path(".tig")
+    index_path = tig_dir / "index"
+    commits_dir = tig_dir / "commits"
+
+    if not tig_dir.exists():
+        print(f"A .tig repository does not exist!")
+        return
+
+    if not index_path.exists() or os.stat(index_path).st_size == 0:
+        print("No staged files to commit.")
+        return
+
+    if not commits_dir.exists():
+        commits_dir.mkdir()
+
+    #generate unique commit ID and current date
+    commit_id = get_next_commit_id()
+    commit_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+    # Read staged files from the index
+    staged_files = []
+    with open(index_path, "r") as index_file:
+        reader = csv.reader(index_file)
+        staged_files = list(reader)
+
+    if not staged_files:
+        print("No files in staging area to commit.")
+        return
+
+    #create new folder for this commit inside the commits folder
+    commit_folder = commits_dir / commit_id
+    commit_folder.mkdir()
+
+    # Write the manifest file (filename and file hash)
+    manifest_file = commit_folder / "manifest.csv"
+    with open(manifest_file, "w") as manifest:
+        writer = csv.writer(manifest)
+        writer.writerow(["filename", "hash"])
+        writer.writerows(staged_files)
+
+
+    for filename, file_hash in staged_files:
+        source_path = Path(filename)
+        dest_path = commit_folder / filename
+        shutil.copy(source_path, dest_path)
+
+    #write info file(commit ID, date, message)
+    info_file = commit_folder / "info.txt"
+    with open(info_file, "w") as info:
+        info.write(f"Commit ID: {commit_id}\n")
+        info.write(f"Date: {commit_date}\n")
+        info.write(f"Message: {commit_message}\n")
+
+    # Clear the `index` file instead of deleting it
+    with open(index_path, "w") as index_file:
+        index_file.truncate()
+
+    print(f"Committed with ID: {commit_id}")
 
 
 def log(n=5):
