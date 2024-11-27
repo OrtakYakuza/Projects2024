@@ -51,7 +51,6 @@ def copy_files(source_dir,backup_dir,manifest): # check which files need to be c
         if not backup_path.exists(): # changes of content --> changes hash codes
             shutil.copy(source_path,backup_path) # copy
 
-
 def init(directory):
     dir_path = Path(directory)  # create path to chosen directory
     tig_dir = dir_path / ".tig"  # create path to wanted tig file
@@ -143,6 +142,51 @@ def log(n=5):
         print(f"Date: {commit_date}")
         print(f"Message: {commit_message}")
         print("-" * 30)
+
+def checkout(commit_id):
+    tig_dir = Path(".tig")
+    commits_dir = tig_dir / "commits"
+    commit_folder = commits_dir / commit_id
+
+    #defensive coding
+    if not tig_dir.exists():
+        print("Not a tig repository!")
+        return
+
+    #defensive coding
+    if not commit_folder.exists():
+        print(f"Commit '{commit_id}' does not exist!")
+        return
+
+    manifest_file = commit_folder / "manifest.csv"
+    if not manifest_file.exists():
+        print(f"Manifest file for commit '{commit_id}' is missing!") #defensive coding
+        return
+
+
+    with open(manifest_file, "r") as manifest:
+        reader = csv.reader(manifest)
+        next(reader) #need to skip header of file
+        file_data = {row[0]: row[1] for row in reader}
+
+
+    for filename, file_hash in file_data.items():
+        source_path = commit_folder / filename
+        dest_path = Path(filename)
+
+        #defensive coding
+        if not source_path.exists():
+            print(f"Error: File for {commit_id}'does not exist!")
+            continue
+
+        # had to use ai to figure out parent attribute of pathlib
+        dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+        
+        shutil.copy(source_path, dest_path)
+        
+
+    print(f"Checkout to commit '{commit_id}' completed.")
 
 #if __name__ == "__main__":
 #    assert len(sys.argv) == 3, "Usage: backup.py source_dir dest_dir"
