@@ -8,6 +8,7 @@ from pathlib import Path
 import csv
 import uuid
 from glob import glob
+import difflib
 
 # hash is a mathematical function that given an input it gives a unique output / identifier for input and it shows where data is stored in a hash table
 HASH_LEN = 16
