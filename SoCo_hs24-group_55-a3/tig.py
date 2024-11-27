@@ -228,86 +228,6 @@ def log(n=5):
         print(f"Message: {commit_message}")
         print("-" * 30)
 
-
-def diff(filename):
-    commits_dir = Path(".tig/commits") #go to commits folder
-    latest_commit = sorted(commits_dir.iterdir(), reverse=True)[0] # sort the folders in the commits and take the last commited one
-    manifest_file = latest_commit / "manifest.csv" # take the manifest file in the commit folder
-    with open(manifest_file, "r") as f:
-        manifest = dict(line.strip().split(",") for line in f.readlines()[1:]) # read the manifest file to find the committed_file through hash 
-    
-    committed_file = latest_commit / manifest[filename] 
-
-    with open(committed_file, "r") as f: 
-        committed_content = f.readlines()
-
-    with open(filename, "r") as f:
-        current_content = f.readlines()
-
-    result = difflib.unified_diff( # used automatic library function
-    committed_content,
-    current_content,
-    lineterm="\n")
-    
-    print(result)
-
-
-def checkout(commit_id):
-    tig_dir = Path(".tig")
-    commits_dir = tig_dir / "commits"
-    commit_folder = commits_dir / commit_id
-
-    #defensive coding
-    if not tig_dir.exists():
-        print("Not a tig repository!")
-        return
-
-    #defensive coding
-    if not commit_folder.exists():
-        print(f"Commit '{commit_id}' does not exist!")
-        return
-
-    manifest_file = commit_folder / "manifest.csv"
-    if not manifest_file.exists():
-        print(f"Manifest file for commit '{commit_id}' is missing!") #defensive coding
-        return
-
-
-    with open(manifest_file, "r") as manifest:
-        reader = csv.reader(manifest)
-        next(reader) #need to skip header of file
-        file_data = {row[0]: row[1] for row in reader}
-
-
-    for filename, file_hash in file_data.items():
-        source_path = commit_folder / filename
-        dest_path = Path(filename)
-
-        #defensive coding
-        if not source_path.exists():
-            print(f"Error: File for {commit_id}'does not exist!")
-            continue
-
-        # had to use ai to figure out parent attribute of pathlib
-        dest_path.parent.mkdir(parents=True, exist_ok=True)
-
-        
-        shutil.copy(source_path, dest_path)
-        
-
-    print(f"Checkout to commit '{commit_id}' completed.")
-
-#if __name__ == "__main__":
-#    assert len(sys.argv) == 3, "Usage: backup.py source_dir dest_dir"
-#    source_dir = sys.argv[1]
-#    dest_dir = sys.argv[2]
-#    backup(source_dir,dest_dir)
-
-
-
-
-
-
 def get_latest_commit_files(commits_folder):
     #we tried to implement this logic directly into the status function, but it was getting too long, and it is easier to understand this way
     if not commits_folder.exists() or not any(commits_folder.iterdir()):
@@ -394,3 +314,79 @@ def status():
 
 #had to write this function because we were struggling with the naming of the commit folders in commits
 #,and it was cleaner this way than to put it in the commit function itself
+
+def diff(filename):
+    commits_dir = Path(".tig/commits") #go to commits folder
+    latest_commit = sorted(commits_dir.iterdir(), reverse=True)[0] # sort the folders in the commits and take the last commited one
+    manifest_file = latest_commit / "manifest.csv" # take the manifest file in the commit folder
+    with open(manifest_file, "r") as f:
+        manifest = dict(line.strip().split(",") for line in f.readlines()[1:]) # read the manifest file to find the committed_file through hash 
+    
+    committed_file = latest_commit / manifest[filename] 
+
+    with open(committed_file, "r") as f: 
+        committed_content = f.readlines()
+
+    with open(filename, "r") as f:
+        current_content = f.readlines()
+
+    result = difflib.unified_diff( # used automatic library function
+    committed_content,
+    current_content,
+    lineterm="\n")
+    
+    print(result)
+
+
+def checkout(commit_id):
+    tig_dir = Path(".tig")
+    commits_dir = tig_dir / "commits"
+    commit_folder = commits_dir / commit_id
+
+    #defensive coding
+    if not tig_dir.exists():
+        print("Not a tig repository!")
+        return
+
+    #defensive coding
+    if not commit_folder.exists():
+        print(f"Commit '{commit_id}' does not exist!")
+        return
+
+    manifest_file = commit_folder / "manifest.csv"
+    if not manifest_file.exists():
+        print(f"Manifest file for commit '{commit_id}' is missing!") #defensive coding
+        return
+
+
+    with open(manifest_file, "r") as manifest:
+        reader = csv.reader(manifest)
+        next(reader) #need to skip header of file
+        file_data = {row[0]: row[1] for row in reader}
+
+
+    for filename, file_hash in file_data.items():
+        source_path = commit_folder / filename
+        dest_path = Path(filename)
+
+        #defensive coding
+        if not source_path.exists():
+            print(f"Error: File for {commit_id}'does not exist!")
+            continue
+
+        # had to use ai to figure out parent attribute of pathlib
+        dest_path.parent.mkdir(parents=True, exist_ok=True)
+
+        
+        shutil.copy(source_path, dest_path)
+        
+
+    print(f"Checkout to commit '{commit_id}' completed.")
+
+#if __name__ == "__main__":
+#    assert len(sys.argv) == 3, "Usage: backup.py source_dir dest_dir"
+#    source_dir = sys.argv[1]
+#    dest_dir = sys.argv[2]
+#    backup(source_dir,dest_dir)
+
+
