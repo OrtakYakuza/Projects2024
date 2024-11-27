@@ -322,25 +322,44 @@ def status():
 
 def diff(filename):
     commits_dir = Path(".tig/commits") #go to commits folder
-    latest_commit = sorted(commits_dir.iterdir(), reverse=True)[0] # sort the folders in the commits and take the last commited one
-    manifest_file = latest_commit / "manifest.csv" # take the manifest file in the commit folder
-    with open(manifest_file, "r") as f:
-        manifest = dict(line.strip().split(",") for line in f.readlines()[1:]) # read the manifest file to find the committed_file through hash 
-    
-    committed_file = latest_commit / manifest[filename] 
+    try:
+        latest_commit = sorted(commits_dir.iterdir(), reverse=True)[0]
+    except IndexError:
+        print("No commits found!")
+        return # sort the folders in the commits and take the last commited one
 
+    manifest_file = latest_commit / "manifest.csv" # take the manifest file in the commit folder
+    if not manifest_file.exists():
+        print("Manifest file is missing in the latest commit.")
+        return
+    
+    with open(manifest_file, "r") as f:
+        reader = csv.reader(f)
+        manifest = {row[0]: row[1] for row in reader if row[0] != "filename"} # read the manifest file to find the committed_file through hash 
+    
+    if filename not in manifest:
+        print(f"File '{filename}' is not tracked in the latest commit.")
+        return
+    
+    committed_file = latest_commit / filename
+    if not committed_file.exists():
+        print(f"Committed file '{committed_file}' does not exist!")
+        return
+    
     with open(committed_file, "r") as f: 
         committed_content = f.readlines()
 
     with open(filename, "r") as f:
         current_content = f.readlines()
 
-    result = difflib.unified_diff( # used automatic library function
-    committed_content,
-    current_content,
-    lineterm="\n")
-    
-    print(result)
+    diff_output = difflib.unified_diff(
+        committed_content,
+        current_content,
+        lineterm=""
+    )
+
+    # Print the diff
+    print("\n".join(diff_output))
 
 
 def checkout(commit_id):
