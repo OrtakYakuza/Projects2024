@@ -309,7 +309,11 @@ def status():
         print("Untracked files:")
         for file in untracked_files:
             print(f"{file}")
-    if not staged_files_status and not modified_staged_files and not modified_unstaged_files and not untracked_files:
+    if committed_files:
+        print("Committed files:")
+        for file in committed_files:
+            print(f"  {file}")
+    if not staged_files_status and not modified_staged_files and not modified_unstaged_files and not untracked_files and not committed_files:
         print("No changes.")
 
 #had to write this function because we were struggling with the naming of the commit folders in commits
