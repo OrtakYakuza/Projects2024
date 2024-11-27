@@ -1,5 +1,3 @@
-# backup is a process of copying data to a separate location to ensure its preserved and can be restored
-
 import sys
 import os
 import time
@@ -52,6 +50,61 @@ def copy_files(source_dir,backup_dir,manifest): # check which files need to be c
         backup_path = Path(backup_dir,hash_code) # /Users/sback/soco_bkp2/0b8e6c43ac411146
         if not backup_path.exists(): # changes of content --> changes hash codes
             shutil.copy(source_path,backup_path) # copy
+
+
+def init(directory):
+    dir_path = Path(directory)  # create path to chosen directory
+    tig_dir = dir_path / ".tig"  # create path to wanted tig file
+
+    # defensive programming
+    if not dir_path.exists():
+        print(f"The directory '{directory}' does not exist!")
+        return
+
+    if tig_dir.exists():
+        print(f"A .tig repository already exists in '{directory}'!")
+        return
+
+    tig_dir.mkdir() # create the tig folder
+
+
+def add_file(filename):
+    tig_dir = Path(".tig")
+    index_path = tig_dir / "index"
+    filepath = Path(filename)
+
+    if not tig_dir.exists():
+        print(f"A .tig repository does not exists!")
+        return
+
+    if not filepath.exists():
+        print(f"File '{filename}' does not exist!")
+        return
+
+    #calculate file hash
+    with open(filepath, "rb") as file:
+        file_hash = sha256(file.read()).hexdigest()
+
+    #check if hash already in index file, if yes overwrite if changed
+
+    if index_path.exists():
+        with open(index_path, "r") as index_file:
+            reader = csv.reader(index_file)
+            staged_files = {row[0]: row[1] for row in reader}
+    else:
+        staged_files = {}
+
+    staged_files[filename] = file_hash
+
+    #write all staged files back to index
+    with open(index_path, "w") as index_file:
+        writer = csv.writer(index_file)
+        for newname, newhash in staged_files.items():
+            writer.writerow([newname, newhash])
+
+    #append the filename and hash to the index
+    print(f"Added '{filename}' to staging area.")
+
 
 def log(n=5):
     tig_dir = Path(".tig")
