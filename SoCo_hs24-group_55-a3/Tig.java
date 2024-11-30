@@ -13,12 +13,32 @@ public class Tig {
     public static final int HASH_LEN = 16;
 
  
+    public record FileEntry(String filename, String hash) {}
+
+
     public static void backup(String sourceDir, String backupDir) {
         List<FileEntry> manifest = hashAll(Paths.get(sourceDir));
         String timestamp = getTimestamp();
         writeManifest(Paths.get(backupDir), timestamp, manifest);
         copyFiles(Paths.get(sourceDir), Paths.get(backupDir), manifest);
     }
+
+    
+    public String calculateHash(Path file) {
+        try {
+            byte[] data = Files.readAllBytes(file);  
+            MessageDigest digest = MessageDigest.getInstance("SHA-256");
+            byte[] hashBytes = digest.digest(data);
+
+            
+            return bytesToHex(hashBytes, HASH_LEN);
+
+        } catch (IOException | NoSuchAlgorithmException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
 
 
     public static List<FileEntry> hashAll(Path root) {
