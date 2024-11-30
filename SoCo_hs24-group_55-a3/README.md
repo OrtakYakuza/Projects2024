@@ -26,3 +26,8 @@ check out restores the repository's state to a specified commit by retrieving th
 
 27.11.24
 after we implemented all functions we merged each branch into main and tested through all the steps. There were still some problems so we updated and debugged the functions until everything works.
+
+29.11.24
+
+reviewed lecture with java file archiver
+implemented file archiver in our tig.py within our tig class as java is object oriented
