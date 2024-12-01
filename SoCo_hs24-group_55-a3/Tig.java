@@ -120,6 +120,36 @@ public class Tig {
         Files.createDirectory(tigDir);
     }
 
+    public static void main(String[] args) {
+        if (args.length < 1) {
+            System.out.println("Usage: java Tig <command> [arguments]");
+            return;
+        }
+
+        String command = args[0];
+        String[] commandArgs = Arrays.copyOfRange(args, 1, args.length);
+
+        Map<String, Consumer<String[]>> commands = new HashMap<>();
+        commands.put("init", Tig::init);
+        commands.put("add", Tig::addFile);
+        commands.put("commit", Tig::commit);
+        commands.put("log", Tig::log);
+        commands.put("status", Tig::status);
+        commands.put("diff", Tig::diff);
+        commands.put("checkout", Tig::checkout);
+
+        if (commands.containsKey(command)) {
+            try {
+                commands.get(command).accept(commandArgs);
+            } catch (Exception e) {
+                System.out.println("Error: Incorrect usage of '" + command + "' command.");
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Unknown command: " + command);
+        }
+
+
     public static void status() {
         Path tigDir = Paths.get(".tig");               
         Path indexPath = tigDir.resolve("index");      
