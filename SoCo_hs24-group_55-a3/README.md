@@ -31,3 +31,7 @@ after we implemented all functions we merged each branch into main and tested th
 
 reviewed lecture with java file archiver
 implemented file archiver in our tig.py within our tig class as java is object oriented
+
+30.11.24
+
+implemeneted the init function in java as this was the first actualy function implementation there was some difficulty invloved as we had to figure out the Path Class from Java which handles things differently from the pathlib module in python 
