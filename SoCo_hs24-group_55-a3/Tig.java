@@ -200,16 +200,13 @@ public class Tig {
             
             Map<String, String> stagedFiles = new HashMap<>();
 
->>>>>>> SoCo_hs24-group_55-a3/Tig.java
             if (Files.exists(indexPath)) {
                 List<String> indexEntries = Files.readAllLines(indexPath);
                 for (String entry : indexEntries) {
                     String[] parts = entry.split(",");
-<<<<<<< SoCo_hs24-group_55-a3/Tig.java
                     if (parts.length == 2) {
                         stagedFiles.put(parts[0], parts[1]); 
                     }
-=======
                     stagedFiles.put(parts[0], parts[1]);
                 }
             }
@@ -237,12 +234,10 @@ public class Tig {
                 writer.write("filename,hash\n");
                 for (Map.Entry<String, String> entry : finalCommitFiles.entrySet()) {
                     writer.write(entry.getKey() + "," + entry.getValue() + "\n");
->>>>>>> SoCo_hs24-group_55-a3/Tig.java
                 }
             }
 
             
-<<<<<<< SoCo_hs24-group_55-a3/Tig.java
             Map<String, String> committedFiles = getLatestCommitFiles(commitsFolder);
 
             
@@ -305,7 +300,6 @@ public class Tig {
             System.out.println("Error: " + e.getMessage());
         }
     }
-=======
             for (String filename : finalCommitFiles.keySet()) {
                 Path sourcePath = Paths.get(filename);
                 Path destPath = commitFolder.resolve(filename);
@@ -403,5 +397,4 @@ public class Tig {
         }
     }
 
->>>>>>> SoCo_hs24-group_55-a3/Tig.java
 }
