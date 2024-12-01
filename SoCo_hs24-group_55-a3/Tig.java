@@ -119,4 +119,87 @@ public class Tig {
         // creates subdirectory
         Files.createDirectory(tigDir);
     }
+
+    public static void commit(String commitMessage) {
+        Path tigDir = Paths.get(".tig");                 
+        Path indexPath = tigDir.resolve("index");        
+        Path commitsDir = tigDir.resolve("commits");     
+
+        try {
+            if (!Files.exists(tigDir)) {                 
+                System.out.println("A .tig repository does not exist!");
+                return;
+            }
+
+            if (!Files.exists(commitsDir)) {             
+                Files.createDirectory(commitsDir);
+            }
+
+            Map<String, String> committedFiles = getLatestCommitFiles(commitsDir);
+
+            
+            Map<String, String> stagedFiles = new HashMap<>();
+
+            if (Files.exists(indexPath)) {
+                List<String> indexEntries = Files.readAllLines(indexPath);
+                for (String entry : indexEntries) {
+                    String[] parts = entry.split(",");
+                    stagedFiles.put(parts[0], parts[1]);
+                }
+            }
+
+            if (stagedFiles.isEmpty() && committedFiles.isEmpty()) { 
+                System.out.println("No staged files to commit.");
+                return;
+            }
+
+            
+            String commitId = getNextCommitId(tigDir.resolve("last_commit_id"));
+            String commitDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+            
+            Path commitFolder = commitsDir.resolve(commitId);
+            Files.createDirectory(commitFolder);
+
+            
+            Map<String, String> finalCommitFiles = new HashMap<>(committedFiles);
+            finalCommitFiles.putAll(stagedFiles);
+
+            
+            Path manifestFile = commitFolder.resolve("manifest.csv");
+            try (BufferedWriter writer = Files.newBufferedWriter(manifestFile)) {
+                writer.write("filename,hash\n");
+                for (Map.Entry<String, String> entry : finalCommitFiles.entrySet()) {
+                    writer.write(entry.getKey() + "," + entry.getValue() + "\n");
+                }
+            }
+
+            
+            for (String filename : finalCommitFiles.keySet()) {
+                Path sourcePath = Paths.get(filename);
+                Path destPath = commitFolder.resolve(filename);
+                if (!Files.exists(sourcePath)) continue; 
+
+                Files.createDirectories(destPath.getParent());
+
+                
+                Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            Path infoFile = commitFolder.resolve("info.txt");
+            try (BufferedWriter writer = Files.newBufferedWriter(infoFile)) {
+                writer.write("Commit ID: " + commitId + "\n");
+                writer.write("Date: " + commitDate + "\n");
+                writer.write("Message: " + commitMessage + "\n");
+            }
+
+            Files.write(indexPath, Collections.emptyList());
+
+            System.out.println("Committed with ID: " + commitId);
+
+        } catch (IOException e) {
+            System.out.println("Error during commit: " + e.getMessage());
+        }
+    }
+
 }
