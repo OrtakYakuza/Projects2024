@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import com.github.difflib.DiffUtils;
+import com.github.difflib.patch.Patch;
 
 public class Tig {
 
@@ -120,6 +122,33 @@ public class Tig {
         Files.createDirectory(tigDir);
     }
 
+    public static void diff(String filename) {
+
+        Path commitsDir = Paths.get(".tig/commits"); 
+
+        try {
+            // sort commits
+            List<Path> commitFolders = Files.list(commitsDir)
+                    .filter(Files::isDirectory)
+                    .sorted(Comparator.comparingLong(p -> p.toFile().lastModified()).reversed())
+                    .collect(Collectors.toList());
+
+            if (commitFolders.isEmpty()) {
+                System.out.println("No commits found!");
+                return;
+            }
+
+            Path latestCommit = commitFolders.get(0); 
+            Path manifestFile = latestCommit.resolve("manifest.csv"); 
+
+            if (!Files.exists(manifestFile)) {
+                System.out.println("Manifest file is missing in the latest commit.");
+                return;
+            }
+
+        
+            Map<String, String> manifest = Files.lines(manifestFile)
+
     public static void checkout(String commitId) {
         Path tigDir = Paths.get(".tig");                
         Path commitsDir = tigDir.resolve("commits");    
@@ -148,6 +177,29 @@ public class Tig {
                     .map(line -> line.split(","))
                     .collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
 
+            if (!manifest.containsKey(filename)) {
+                System.out.println("File '" + filename + "' is not tracked in the latest commit.");
+                return;
+            }
+
+            Path committedFile = latestCommit.resolve(filename); 
+            if (!Files.exists(committedFile)) {
+                System.out.println("Committed file '" + filename + "' does not exist!");
+                return;
+            }
+
+            List<String> committedContent = Files.readAllLines(committedFile);
+            List<String> currentContent = Files.readAllLines(Paths.get(filename));
+
+            // use library
+            Patch<String> patch = DiffUtils.diff(committedContent, currentContent);
+
+            patch.getDeltas().forEach(delta -> {
+                System.out.println(delta);
+            });
+
+        } catch (IOException e) {
+            System.out.println("Error reading commits: " + e.getMessage());
             
             Files.list(Paths.get("."))
                     .filter(file -> !file.getFileName().toString().startsWith(".tig"))
