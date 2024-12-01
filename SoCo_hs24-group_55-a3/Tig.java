@@ -120,6 +120,24 @@ public class Tig {
         Files.createDirectory(tigDir);
     }
 
+    private static String getNextCommitId(Path lastCommitFile) throws IOException {
+
+        Path dirPath = Paths.get(directory);
+        Path tigDir = dirPath.resolve(".tig");
+
+        int lastId = 0; // if lastcommitfile doesnt exist
+
+        if (Files.exists(lastCommitFile)) {
+            lastId = Integer.parseInt(Files.readString(lastCommitFile).trim());
+        }
+
+        int nextId = lastId + 1;
+
+        Files.writeString(lastCommitFile, String.valueOf(nextId));
+
+        return String.format("commit_%04d", nextId);
+    }
+
     public static void addFile(String filename) {
 
     Path tigPath = Paths.get(directory);
@@ -171,9 +189,5 @@ public class Tig {
         System.out.println("Error adding file: " + e.getMessage());
     }
 }
-
-
-
-
 
 }
