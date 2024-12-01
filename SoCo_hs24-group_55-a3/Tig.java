@@ -172,7 +172,40 @@ public class Tig {
     }
 }
 
+    private static void log(int n) throws IOException {
+            Path tigDir = Paths.get(".tig");
+            Path commitsDir = tigDir.resolve("commits");
 
+            if (!Files.exists(tigDir)) {
+                System.out.println("No tig repository!");
+                return;
+            }
+
+            if (!Files.exists(commitsDir)) {
+                System.out.println("No commits found!");
+                return;
+            }
+
+            try (DirectoryStream<Path> stream = Files.newDirectoryStream(commitsDir)) {
+                List<Path> commitFolders = new ArrayList<>();
+                for (Path path : stream) {
+                    if (Files.isDirectory(path)) {
+                        commitFolders.add(path);
+                    }
+                }
+
+                commitFolders.sort(Comparator.comparing(path -> path.getFileName().toString()).reversed());
+
+                for (int i = 0; i < Math.min(n, commitFolders.size()); i++) {
+                    Path commitFolder = commitFolders.get(i);
+                    Path infoFile = commitFolder.resolve("info.txt");
+                    if (Files.exists(infoFile)) {
+                        Files.lines(infoFile).forEach(System.out::println);
+                        System.out.println("-----------------------------");
+                    }
+                }
+            }
+        }
 
 
 
