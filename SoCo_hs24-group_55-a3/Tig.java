@@ -99,4 +99,24 @@ public class Tig {
         }
     }
 
+    public static void init(String directory) throws IOException {
+        Path dirPath = Paths.get(directory); // convert string into an pathobject
+        Path tigDir = dirPath.resolve(".tig"); // resolve appends the tig to dirpath
+
+
+        // defensive coding
+
+        if (!Files.exists(dirPath)) {
+            System.out.println("The directory '" + directory + "' does not exist!");
+            return;
+        }
+
+        if (Files.exists(tigDir)) {
+            System.out.println("A .tig repository already exists in '" + directory + "'!");
+            return;
+        }
+
+        // creates subdirectory
+        Files.createDirectory(tigDir);
+    }
 }
