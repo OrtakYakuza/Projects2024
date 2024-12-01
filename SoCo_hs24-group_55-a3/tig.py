@@ -130,6 +130,7 @@ def get_next_commit_id():
 
     return f"commit_{next_id:04d}"  #formats id as commit_0001, commit_0002...
 
+
 def commit(commit_message):
     tig_dir = Path(".tig")
     index_path = tig_dir / "index"
@@ -139,52 +140,57 @@ def commit(commit_message):
         print(f"A .tig repository does not exist!")
         return
 
-    if not index_path.exists() or os.stat(index_path).st_size == 0:
-        print("No staged files to commit.")
-        return
-
     if not commits_dir.exists():
         commits_dir.mkdir()
 
-    #generate unique commit ID and current date
-    commit_id = get_next_commit_id()
-    commit_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+    
+    committed_files = get_latest_commit_files(commits_dir)
 
-    # Read staged files from the index
-    staged_files = []
-    with open(index_path, "r") as index_file:
-        reader = csv.reader(index_file)
-        staged_files = list(reader)
+    
+    staged_files = {}
+    if index_path.exists():
+        with open(index_path, "r") as index_file:
+            reader = csv.reader(index_file)
+            staged_files = {row[0]: row[1] for row in reader}
 
-    if not staged_files:
-        print("No files in staging area to commit.")
+    if not staged_files and not committed_files:
+        print("No staged files to commit.")
         return
 
-    #create new folder for this commit inside the commits folder
+    
+    commit_id = get_next_commit_id()
+    commit_date = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
     commit_folder = commits_dir / commit_id
     commit_folder.mkdir()
 
-    # Write the manifest file (filename and file hash)
+    
+    final_commit_files = committed_files.copy()
+    final_commit_files.update(staged_files)
+
+    
     manifest_file = commit_folder / "manifest.csv"
     with open(manifest_file, "w") as manifest:
         writer = csv.writer(manifest)
         writer.writerow(["filename", "hash"])
-        writer.writerows(staged_files)
+        for filename, file_hash in final_commit_files.items():
+            writer.writerow([filename, file_hash])
 
-
-    for filename, file_hash in staged_files:
+    
+    for filename in final_commit_files:
         source_path = Path(filename)
         dest_path = commit_folder / filename
-        shutil.copy(source_path, dest_path)
+        dest_path.parent.mkdir(parents=True, exist_ok=True)  
+        if source_path.exists():
+            shutil.copy(source_path, dest_path)
 
-    #write info file(commit ID, date, message)
+    
     info_file = commit_folder / "info.txt"
     with open(info_file, "w") as info:
         info.write(f"Commit ID: {commit_id}\n")
         info.write(f"Date: {commit_date}\n")
         info.write(f"Message: {commit_message}\n")
 
-    # Clear the `index` file instead of deleting it
+    
     with open(index_path, "w") as index_file:
         index_file.truncate()
 
@@ -257,13 +263,11 @@ def status():
     index_path = tig_dir / "index"
     commits_folder = Path(".tig/commits")
 
-
     if not tig_dir.exists():
         print("Error: Not a tig repository (or .tig directory missing).")
         return
 
-    # append all files in directory to list, except those in .tig folder (to compare later)
-
+    
     files_in_working_directory = [file for file in os.listdir(".") if
                                   os.path.isfile(file) and not file.startswith(".tig")]
 
@@ -272,7 +276,6 @@ def status():
         with open(index_path, "r") as index_file:
             reader = csv.reader(index_file)
             staged_files = {row[0]: row[1] for row in reader}
-
 
     untracked_files = []
     staged_files_status = []
@@ -285,7 +288,8 @@ def status():
         if file in staged_files:
             if current_hash != staged_files[file]:
                 modified_staged_files.append(file)
-            staged_files_status.append(file)
+            else:
+                staged_files_status.append(file)
 
         elif file in committed_files:
             if current_hash != committed_files[file]:
@@ -293,6 +297,13 @@ def status():
 
         else:
             untracked_files.append(file)
+
+    
+    committed_files_display = {
+        file: hash_code
+        for file, hash_code in committed_files.items()
+        if file not in modified_unstaged_files
+    }
 
     if staged_files_status:
         print("Staged files:")
@@ -310,56 +321,12 @@ def status():
         print("Untracked files:")
         for file in untracked_files:
             print(f"{file}")
-    if committed_files:
+    if committed_files_display:
         print("Committed files:")
-        for file in committed_files:
+        for file in committed_files_display:
             print(f"  {file}")
-    if not staged_files_status and not modified_staged_files and not modified_unstaged_files and not untracked_files and not committed_files:
+    if not staged_files_status and not modified_staged_files and not modified_unstaged_files and not untracked_files and not committed_files_display:
         print("No changes.")
-
-#had to write this function because we were struggling with the naming of the commit folders in commits
-#,and it was cleaner this way than to put it in the commit function itself
-
-def diff(filename):
-    commits_dir = Path(".tig/commits") #go to commits folder
-    try:
-        latest_commit = sorted(commits_dir.iterdir(), reverse=True)[0]
-    except IndexError:
-        print("No commits found!")
-        return # sort the folders in the commits and take the last commited one
-
-    manifest_file = latest_commit / "manifest.csv" # take the manifest file in the commit folder
-    if not manifest_file.exists():
-        print("Manifest file is missing in the latest commit.")
-        return
-    
-    with open(manifest_file, "r") as f:
-        reader = csv.reader(f)
-        manifest = {row[0]: row[1] for row in reader if row[0] != "filename"} # read the manifest file to find the committed_file through hash 
-    
-    if filename not in manifest:
-        print(f"File '{filename}' is not tracked in the latest commit.")
-        return
-    
-    committed_file = latest_commit / filename
-    if not committed_file.exists():
-        print(f"Committed file '{committed_file}' does not exist!")
-        return
-    
-    with open(committed_file, "r") as f: 
-        committed_content = f.readlines()
-
-    with open(filename, "r") as f:
-        current_content = f.readlines()
-
-    diff_output = difflib.unified_diff(
-        committed_content,
-        current_content,
-        lineterm=""
-    )
-
-    # Print the diff
-    print("\n".join(diff_output))
 
 
 def checkout(commit_id):
