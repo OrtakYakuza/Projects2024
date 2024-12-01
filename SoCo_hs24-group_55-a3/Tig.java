@@ -119,4 +119,72 @@ public class Tig {
         // creates subdirectory
         Files.createDirectory(tigDir);
     }
+
+    public static void checkout(String commitId) {
+        Path tigDir = Paths.get(".tig");                
+        Path commitsDir = tigDir.resolve("commits");    
+        Path commitFolder = commitsDir.resolve(commitId); 
+
+        try {
+            if (!Files.exists(tigDir)) {               
+                System.out.println("Not a tig repository!");
+                return;
+            }
+
+            if (!Files.exists(commitFolder)) {          
+                System.out.println("Commit '" + commitId + "' does not exist!");
+                return;
+            }
+
+            Path manifestFile = commitFolder.resolve("manifest.csv");
+            if (!Files.exists(manifestFile)) {         
+                System.out.println("Manifest file for commit '" + commitId + "' is missing!");
+                return;
+            }
+
+            
+            Map<String, String> fileData = Files.lines(manifestFile)
+                    .skip(1) 
+                    .map(line -> line.split(","))
+                    .collect(Collectors.toMap(parts -> parts[0], parts -> parts[1]));
+
+            
+            Files.list(Paths.get("."))
+                    .filter(file -> !file.getFileName().toString().startsWith(".tig"))
+                    .forEach(file -> {
+                        try {
+                            if (Files.isDirectory(file)) {
+                                Files.walk(file) 
+                                        .sorted(Comparator.reverseOrder())
+                                        .map(Path::toFile)
+                                        .forEach(File::delete);
+                            } else if (!fileData.containsKey(file.getFileName().toString())) {
+                                Files.delete(file); 
+                            }
+                        } catch (IOException e) {
+                            System.out.println("Error deleting file: " + file.getFileName());
+                        }
+                    });
+
+            
+            for (String filename : fileData.keySet()) {
+                Path sourcePath = commitFolder.resolve(filename);
+                Path destPath = Paths.get(filename);
+
+                if (!Files.exists(sourcePath)) {        
+                    System.out.println("Error: File '" + filename + "' does not exist in the commit!");
+                    continue;
+                }
+
+                Files.createDirectories(destPath.getParent());
+
+                Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            System.out.println("Checkout to commit '" + commitId + "' completed.");
+        } catch (IOException e) {
+            System.out.println("Error during checkout: " + e.getMessage());
+        }
+    }
+
 }
