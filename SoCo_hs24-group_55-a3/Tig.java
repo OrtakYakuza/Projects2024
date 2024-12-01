@@ -435,6 +435,43 @@ public class Tig {
         }
     }
 
+
+
+    public static void log(int n) throws IOException {
+        File tigDir = new File(TIG_DIR);
+        File commitsDir = new File(tigDir, "commits");
+
+        if (!tigDir.exists()) {
+            System.out.println("No tig repository!");
+            return;
+        }
+
+        if (!commitsDir.exists() || Objects.requireNonNull(commitsDir.listFiles()).length == 0) {
+            System.out.println("No commits found!");
+            return;
+        }
+
+        List<File> commitFolders = Arrays.stream(Objects.requireNonNull(commitsDir.listFiles()))
+                .filter(File::isDirectory)
+                .sorted(Comparator.comparing(File::getName).reversed())
+                .limit(n)
+                .collect(Collectors.toList());
+
+        for (File commitFolder : commitFolders) {
+            File infoFile = new File(commitFolder, "info.txt");
+            if (!infoFile.exists()) {
+                System.out.println("Missing info.txt in " + commitFolder.getName());
+                continue;
+            }
+
+            try (BufferedReader reader = new BufferedReader(new FileReader(infoFile))) {
+                reader.lines().forEach(System.out::println);
+            }
+            System.out.println("-".repeat(30));
+        }
+    }
+
+
     public static void diff(String filename) {
 
         Path commitsDir = Paths.get(".tig/commits"); 
