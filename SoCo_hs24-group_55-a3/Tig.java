@@ -120,6 +120,24 @@ public class Tig {
         Files.createDirectory(tigDir);
     }
 
+    public static void status() {
+        Path tigDir = Paths.get(".tig");               
+        Path indexPath = tigDir.resolve("index");      
+        Path commitsFolder = tigDir.resolve("commits");
+
+        if (!Files.exists(tigDir)) {                   
+            System.out.println("Error: Not a tig repository (or .tig directory missing).");
+            return;
+        }
+
+        try {
+            
+            List<Path> workingFiles = Files.list(Paths.get("."))
+                    .filter(file -> Files.isRegularFile(file) && !file.getFileName().toString().startsWith(".tig"))
+                    .collect(Collectors.toList());
+
+            
+            Map<String, String> stagedFiles = new HashMap<>();
 
     public static Map<String, String> getLatestCommitFiles(Path commitsFolder) {
 
@@ -182,10 +200,16 @@ public class Tig {
             
             Map<String, String> stagedFiles = new HashMap<>();
 
+>>>>>>> SoCo_hs24-group_55-a3/Tig.java
             if (Files.exists(indexPath)) {
                 List<String> indexEntries = Files.readAllLines(indexPath);
                 for (String entry : indexEntries) {
                     String[] parts = entry.split(",");
+<<<<<<< SoCo_hs24-group_55-a3/Tig.java
+                    if (parts.length == 2) {
+                        stagedFiles.put(parts[0], parts[1]); 
+                    }
+=======
                     stagedFiles.put(parts[0], parts[1]);
                 }
             }
@@ -213,10 +237,75 @@ public class Tig {
                 writer.write("filename,hash\n");
                 for (Map.Entry<String, String> entry : finalCommitFiles.entrySet()) {
                     writer.write(entry.getKey() + "," + entry.getValue() + "\n");
+>>>>>>> SoCo_hs24-group_55-a3/Tig.java
                 }
             }
 
             
+<<<<<<< SoCo_hs24-group_55-a3/Tig.java
+            Map<String, String> committedFiles = getLatestCommitFiles(commitsFolder);
+
+            
+            List<String> untrackedFiles = new ArrayList<>();
+            List<String> stagedFilesStatus = new ArrayList<>();
+            List<String> modifiedStagedFiles = new ArrayList<>();
+            List<String> modifiedUnstagedFiles = new ArrayList<>();
+            Map<String, String> committedFilesDisplay = new HashMap<>(committedFiles);
+
+            for (Path file : workingFiles) {
+                String filename = file.getFileName().toString();
+                String currentHash = calculateHash(file); 
+
+                if (stagedFiles.containsKey(filename)) {
+                    
+                    if (!currentHash.equals(stagedFiles.get(filename))) {
+                        modifiedStagedFiles.add(filename);
+                    } else {
+                        stagedFilesStatus.add(filename);
+                    }
+                } else if (committedFiles.containsKey(filename)) {
+                   
+                    if (!currentHash.equals(committedFiles.get(filename))) {
+                        modifiedUnstagedFiles.add(filename);
+                        committedFilesDisplay.remove(filename); 
+                    }
+                } else {
+                    
+                    untrackedFiles.add(filename);
+                }
+            }
+
+           
+            if (!stagedFilesStatus.isEmpty()) {
+                System.out.println("Staged files:");
+                stagedFilesStatus.forEach(System.out::println);
+            }
+            if (!modifiedStagedFiles.isEmpty()) {
+                System.out.println("Modified and Staged files:");
+                modifiedStagedFiles.forEach(file -> System.out.println("  " + file));
+            }
+            if (!modifiedUnstagedFiles.isEmpty()) {
+                System.out.println("Modified and Not Staged files:");
+                modifiedUnstagedFiles.forEach(file -> System.out.println("  " + file));
+            }
+            if (!untrackedFiles.isEmpty()) {
+                System.out.println("Untracked files:");
+                untrackedFiles.forEach(System.out::println);
+            }
+            if (!committedFilesDisplay.isEmpty()) {
+                System.out.println("Committed files:");
+                committedFilesDisplay.keySet().forEach(file -> System.out.println("  " + file));
+            }
+            if (stagedFilesStatus.isEmpty() && modifiedStagedFiles.isEmpty() &&
+                modifiedUnstagedFiles.isEmpty() && untrackedFiles.isEmpty() &&
+                committedFilesDisplay.isEmpty()) {
+                System.out.println("No changes.");
+            }
+        } catch (IOException | NoSuchAlgorithmException e) {
+            System.out.println("Error: " + e.getMessage());
+        }
+    }
+=======
             for (String filename : finalCommitFiles.keySet()) {
                 Path sourcePath = Paths.get(filename);
                 Path destPath = commitFolder.resolve(filename);
@@ -314,4 +403,5 @@ public class Tig {
         }
     }
 
+>>>>>>> SoCo_hs24-group_55-a3/Tig.java
 }
