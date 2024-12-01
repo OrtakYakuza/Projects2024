@@ -119,4 +119,46 @@ public class Tig {
         // creates subdirectory
         Files.createDirectory(tigDir);
     }
+
+
+    public static Map<String, String> getLatestCommitFiles(Path commitsFolder) {
+
+        Map<String, String> latestCommitFiles = new HashMap<>();
+
+        try {
+
+            if (!Files.exists(commitsFolder) || Files.list(commitsFolder).findAny().isEmpty()) {
+                return latestCommitFiles; 
+            }
+
+            List<Path> commitFolders = Files.list(commitsFolder)
+                    .filter(Files::isDirectory)
+                    .collect(Collectors.toList());
+
+            if (commitFolders.isEmpty()) {
+                return latestCommitFiles; 
+            }
+
+            Path latestCommitFolder = commitFolders.stream()
+                    .max(Comparator.comparingLong(folder -> folder.toFile().lastModified()))
+                    .orElseThrow(() -> new IOException("No valid commit folders found."));
+
+            Path manifestFile = latestCommitFolder.resolve("manifest.csv");
+
+            if (Files.exists(manifestFile)) {
+                List<String> lines = Files.readAllLines(manifestFile);
+                for (int i = 1; i < lines.size(); i++) { 
+                    String[] parts = lines.get(i).split(",");
+                    if (parts.length == 2) {
+                        latestCommitFiles.put(parts[0], parts[1]); 
+                    }
+                }
+            }
+
+        } catch (IOException e) {
+            System.out.println("Error processing commits folder: " + e.getMessage());
+        }
+
+        return latestCommitFiles; 
+    }
 }
