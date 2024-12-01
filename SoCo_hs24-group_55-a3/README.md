@@ -25,7 +25,7 @@ for the diff function we used the library method which we had to looked up on th
 check out restores the repository's state to a specified commit by retrieving the commit's manifest, cleaning the current working directory + copying the files associated with the commit from the .tig/commits directory
 
 27.11.24
-after we implemented all functions we merged each branch into main and tested through all the steps. There were still some problems so we updated and debugged the functions until everything works.
+after we implemented all functions we merged each branch into main and tested through all the steps. There were still some problems so we updated and debugged the functions until everything works. More specifically we had to change the status and commit functio we came to this realization when our checkout function was not giving the correct output
 
 29.11.24
 
