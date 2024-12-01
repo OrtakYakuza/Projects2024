@@ -202,4 +202,74 @@ public class Tig {
         }
     }
 
+    private static String getNextCommitId(Path lastCommitFile) throws IOException {
+
+        Path dirPath = Paths.get(directory);
+        Path tigDir = dirPath.resolve(".tig");
+
+        int lastId = 0; // if lastcommitfile doesnt exist
+
+        if (Files.exists(lastCommitFile)) {
+            lastId = Integer.parseInt(Files.readString(lastCommitFile).trim());
+        }
+
+        int nextId = lastId + 1;
+
+        Files.writeString(lastCommitFile, String.valueOf(nextId));
+
+        return String.format("commit_%04d", nextId);
+    }
+
+    public static void addFile(String filename) {
+
+        Path tigPath = Paths.get(directory);
+        Path indexPath = tigPath.resolve(".index");
+        Path filepath = Paths.get(filename);
+
+        try {
+
+            if (!Files.exists(tigPath)) {
+                System.out.println("A .tig repository does not exist!");
+                return;
+            }
+
+            if (!Files.exists(filepath)) {
+                System.out.println("File '" + filename + "' does not exist!");
+                return;
+            }
+
+            String fileHash = calculateHash(filepath);
+
+            List<String> indexEntries = new ArrayList<>();
+
+            if (Files.exists(indexPath)) {
+                indexEntries = Files.readAllLines(indexPath);
+            }
+
+            boolean updated = false;  // check if the file is in the index
+
+            for (int i = 0; i < indexEntries.size(); i++) {
+
+                String[] parts = indexEntries.get(i).split(",");
+
+                if (parts[0].equals(filename)) {  
+                    indexEntries.set(i, filename + "," + fileHash);  // update 
+                    updated = true;
+                    break;
+                }
+            }
+
+            // file not in index
+            if (!updated) {
+                indexEntries.add(filename + "," + fileHash);
+            }
+
+            Files.write(indexPath, indexEntries);
+
+            System.out.println("Added '" + filename + "' to staging area.");
+        } catch (IOException | NoSuchAlgorithmException e) {
+            System.out.println("Error adding file: " + e.getMessage());
+        }
+    }
+
 }
