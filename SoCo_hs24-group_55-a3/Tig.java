@@ -138,17 +138,111 @@ public class Tig {
 
             
             Map<String, String> stagedFiles = new HashMap<>();
-            if (Files.exists(indexPath)) {
-                List<String> indexEntries = Files.readAllLines(indexPath);
-                for (String entry : indexEntries) {
-                    String[] parts = entry.split(",");
+
+    public static Map<String, String> getLatestCommitFiles(Path commitsFolder) {
+
+        Map<String, String> latestCommitFiles = new HashMap<>();
+
+        try {
+
+            if (!Files.exists(commitsFolder) || Files.list(commitsFolder).findAny().isEmpty()) {
+                return latestCommitFiles; 
+            }
+
+            List<Path> commitFolders = Files.list(commitsFolder)
+                    .filter(Files::isDirectory)
+                    .collect(Collectors.toList());
+
+            if (commitFolders.isEmpty()) {
+                return latestCommitFiles; 
+            }
+
+            Path latestCommitFolder = commitFolders.stream()
+                    .max(Comparator.comparingLong(folder -> folder.toFile().lastModified()))
+                    .orElseThrow(() -> new IOException("No valid commit folders found."));
+
+            Path manifestFile = latestCommitFolder.resolve("manifest.csv");
+
+            if (Files.exists(manifestFile)) {
+                List<String> lines = Files.readAllLines(manifestFile);
+                for (int i = 1; i < lines.size(); i++) { 
+                    String[] parts = lines.get(i).split(",");
                     if (parts.length == 2) {
-                        stagedFiles.put(parts[0], parts[1]); 
+                        latestCommitFiles.put(parts[0], parts[1]); 
                     }
                 }
             }
 
+        } catch (IOException e) {
+            System.out.println("Error processing commits folder: " + e.getMessage());
+        }
+
+        return latestCommitFiles; 
+    }
+
+    public static void commit(String commitMessage) {
+        Path tigDir = Paths.get(".tig");                 
+        Path indexPath = tigDir.resolve("index");        
+        Path commitsDir = tigDir.resolve("commits");     
+
+        try {
+            if (!Files.exists(tigDir)) {                 
+                System.out.println("A .tig repository does not exist!");
+                return;
+            }
+
+            if (!Files.exists(commitsDir)) {             
+                Files.createDirectory(commitsDir);
+            }
+
+            Map<String, String> committedFiles = getLatestCommitFiles(commitsDir);
+
             
+            Map<String, String> stagedFiles = new HashMap<>();
+
+>>>>>>> SoCo_hs24-group_55-a3/Tig.java
+            if (Files.exists(indexPath)) {
+                List<String> indexEntries = Files.readAllLines(indexPath);
+                for (String entry : indexEntries) {
+                    String[] parts = entry.split(",");
+<<<<<<< SoCo_hs24-group_55-a3/Tig.java
+                    if (parts.length == 2) {
+                        stagedFiles.put(parts[0], parts[1]); 
+                    }
+=======
+                    stagedFiles.put(parts[0], parts[1]);
+                }
+            }
+
+            if (stagedFiles.isEmpty() && committedFiles.isEmpty()) { 
+                System.out.println("No staged files to commit.");
+                return;
+            }
+
+            
+            String commitId = getNextCommitId(tigDir.resolve("last_commit_id"));
+            String commitDate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss").format(new Date());
+
+            
+            Path commitFolder = commitsDir.resolve(commitId);
+            Files.createDirectory(commitFolder);
+
+            
+            Map<String, String> finalCommitFiles = new HashMap<>(committedFiles);
+            finalCommitFiles.putAll(stagedFiles);
+
+            
+            Path manifestFile = commitFolder.resolve("manifest.csv");
+            try (BufferedWriter writer = Files.newBufferedWriter(manifestFile)) {
+                writer.write("filename,hash\n");
+                for (Map.Entry<String, String> entry : finalCommitFiles.entrySet()) {
+                    writer.write(entry.getKey() + "," + entry.getValue() + "\n");
+>>>>>>> SoCo_hs24-group_55-a3/Tig.java
+                }
+            }
+
+            
+<<<<<<< SoCo_hs24-group_55-a3/Tig.java
             Map<String, String> committedFiles = getLatestCommitFiles(commitsFolder);
 
             
@@ -211,4 +305,103 @@ public class Tig {
             System.out.println("Error: " + e.getMessage());
         }
     }
+=======
+            for (String filename : finalCommitFiles.keySet()) {
+                Path sourcePath = Paths.get(filename);
+                Path destPath = commitFolder.resolve(filename);
+                if (!Files.exists(sourcePath)) continue; 
+
+                Files.createDirectories(destPath.getParent());
+
+                
+                Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            Path infoFile = commitFolder.resolve("info.txt");
+            try (BufferedWriter writer = Files.newBufferedWriter(infoFile)) {
+                writer.write("Commit ID: " + commitId + "\n");
+                writer.write("Date: " + commitDate + "\n");
+                writer.write("Message: " + commitMessage + "\n");
+            }
+
+            Files.write(indexPath, Collections.emptyList());
+
+            System.out.println("Committed with ID: " + commitId);
+
+        } catch (IOException e) {
+            System.out.println("Error during commit: " + e.getMessage());
+        }
+    }
+
+    private static String getNextCommitId(Path lastCommitFile) throws IOException {
+
+        Path dirPath = Paths.get(directory);
+        Path tigDir = dirPath.resolve(".tig");
+
+        int lastId = 0; // if lastcommitfile doesnt exist
+
+        if (Files.exists(lastCommitFile)) {
+            lastId = Integer.parseInt(Files.readString(lastCommitFile).trim());
+        }
+
+        int nextId = lastId + 1;
+
+        Files.writeString(lastCommitFile, String.valueOf(nextId));
+
+        return String.format("commit_%04d", nextId);
+    }
+
+    public static void addFile(String filename) {
+
+        Path tigPath = Paths.get(directory);
+        Path indexPath = tigPath.resolve(".index");
+        Path filepath = Paths.get(filename);
+
+        try {
+
+            if (!Files.exists(tigPath)) {
+                System.out.println("A .tig repository does not exist!");
+                return;
+            }
+
+            if (!Files.exists(filepath)) {
+                System.out.println("File '" + filename + "' does not exist!");
+                return;
+            }
+
+            String fileHash = calculateHash(filepath);
+
+            List<String> indexEntries = new ArrayList<>();
+
+            if (Files.exists(indexPath)) {
+                indexEntries = Files.readAllLines(indexPath);
+            }
+
+            boolean updated = false;  // check if the file is in the index
+
+            for (int i = 0; i < indexEntries.size(); i++) {
+
+                String[] parts = indexEntries.get(i).split(",");
+
+                if (parts[0].equals(filename)) {  
+                    indexEntries.set(i, filename + "," + fileHash);  // update 
+                    updated = true;
+                    break;
+                }
+            }
+
+            // file not in index
+            if (!updated) {
+                indexEntries.add(filename + "," + fileHash);
+            }
+
+            Files.write(indexPath, indexEntries);
+
+            System.out.println("Added '" + filename + "' to staging area.");
+        } catch (IOException | NoSuchAlgorithmException e) {
+            System.out.println("Error adding file: " + e.getMessage());
+        }
+    }
+
+>>>>>>> SoCo_hs24-group_55-a3/Tig.java
 }
