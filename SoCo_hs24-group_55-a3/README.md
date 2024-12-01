@@ -27,8 +27,104 @@ check out restores the repository's state to a specified commit by retrieving th
 27.11.24
 after we implemented all functions we merged each branch into main and tested through all the steps. There were still some problems so we updated and debugged the functions until everything works. More specifically we had to change the status and commit functio we came to this realization when our checkout function was not giving the correct output
 
+STEP1 output of the commands:
+
+1. mkdir repo
+python3 tig.py init repo
+
+our output: 
+
+No specific output in terminal but the directory gets created and a tig repository is initialized.
+
+2. cd repo
+echo "Initial content" > file.txt
+echo "Initial content of the other file" > other_file.txt
+python3 ../tig.py status
+
+our ouput: 
+
+Untracked files:
+file.txt
+other_file.txt
+
+3. python3 ../tig.py add file.txt
+python3 ../tig.py add other_file.txt
+python3 ../tig.py status
+
+our output:
+
+Added 'file.txt' to staging area.
+Added 'other_file.txt' to staging area.
+Staged files:
+file.txt
+other_file.txt
+
+
+4. python3 ../tig.py commit "Initial commit"
+python3 ../tig.py status
+
+our output:
+Committed with ID: commit_0001
+Committed files:
+  file.txt
+  other_file.txt
+
+5. echo "Updated content" >> file.txt
+python3 ../tig.py status
+
+our output:
+Modified and Not Staged files:
+  file.txt
+Committed files:
+  other_file.txt
+
+6. python3 ../tig.py diff file.txt
+
+our output:
++++ 
+@@ -1 +1,2 @@
+ Initial content
+
++Updated content
+
+7. python3 ../tig.py add file.txt
+python3 ../tig.py commit "Updated content in file.txt"
+
+our output:
+
+Added 'file.txt' to staging area.
+Committed with ID: commit_0002
+
+8. python3 ../tig.py log
+python3 ../tig.py checkout commit_0001
+
+our output:
+
+Displaying the last 2 commits:
+
+Commit ID: commit_0002
+Date: 2024-12-01 17
+Message: Updated content in file.txt
+------------------------------
+Commit ID: commit_0001
+Date: 2024-12-01 17
+Message: Initial commit
+------------------------------
+Checkout to commit 'commit_0001' completed.
+
+9. python3 ../tig.py status
+
+our output:
+
+Modified and Not Staged files:
+  file.txt
+Committed files:
+  other_file.txt
+
+
 29.11.24
 
+As we have officially finished Step1 we move on to Step2!
 reviewed lecture with java file archiver
 implemented file archiver in our tig.py within our tig class as java is object oriented
 
