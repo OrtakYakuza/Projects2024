@@ -1,0 +1,613 @@
+// Source code is decompiled from a .class file using FernFlower decompiler.
+import java.io.BufferedWriter;
+import java.io.IOException;
+import java.io.PrintStream;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.time.Instant;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.Set;
+import java.util.function.Consumer;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+public class Tig {
+   public static final int HASH_LEN = 16;
+   public static final String TIG_DIR = ".tig";
+
+   public Tig() {
+   }
+
+   private static Set<String> readTigIgnore() {
+      Path var0 = Paths.get(".tig", ".tigignore");
+      HashSet var1 = new HashSet();
+      if (Files.exists(var0, new LinkOption[0])) {
+         try {
+            List var2 = Files.readAllLines(var0);
+            var1.addAll((Collection)var2.stream().map(String::trim).filter((var0x) -> {
+               return !var0x.isEmpty();
+            }).collect(Collectors.toSet()));
+         } catch (IOException var3) {
+            System.out.println("Error reading .tigignore: " + var3.getMessage());
+         }
+      }
+
+      return var1;
+   }
+
+   public static String calculateHash(Path var0) {
+      try {
+         byte[] var1 = Files.readAllBytes(var0);
+         MessageDigest var2 = MessageDigest.getInstance("SHA-256");
+         byte[] var3 = var2.digest(var1);
+         return bytesToHex(var3, 16);
+      } catch (NoSuchAlgorithmException | IOException var4) {
+         var4.printStackTrace();
+         return null;
+      }
+   }
+
+   private static String bytesToHex(byte[] var0, int var1) {
+      StringBuilder var2 = new StringBuilder();
+
+      for(int var3 = 0; var3 < Math.min(var0.length, var1); ++var3) {
+         var2.append(String.format("%02x", var0[var3]));
+      }
+
+      return var2.toString();
+   }
+
+   public static void init(String[] var0) {
+      if (var0.length != 1) {
+         System.out.println("Usage: init <directory>");
+      } else {
+         String var1 = var0[0];
+         Path var2 = Paths.get(var1);
+         Path var3 = var2.resolve(".tig");
+
+         try {
+            if (!Files.exists(var2, new LinkOption[0])) {
+               System.out.println("The directory '" + var1 + "' does not exist!");
+               return;
+            }
+
+            if (Files.exists(var3, new LinkOption[0])) {
+               System.out.println("A .tig repository already exists in '" + var1 + "'!");
+               return;
+            }
+
+            Files.createDirectory(var3);
+            System.out.println("Initialized empty Tig repository in " + String.valueOf(var3));
+         } catch (IOException var5) {
+            System.out.println("Error initializing repository: " + var5.getMessage());
+         }
+
+      }
+   }
+
+   public static void addFile(String[] var0) {
+      if (var0.length != 1) {
+         System.out.println("Usage: add <filename>");
+      } else {
+         String var1 = var0[0];
+         Path var2 = Paths.get(".tig");
+         Path var3 = var2.resolve("index");
+         Path var4 = Paths.get(var1);
+         Set var5 = readTigIgnore();
+         if (var5.contains(var1)) {
+            System.out.println("File '" + var1 + "' is ignored as per .tigignore.");
+         } else {
+            try {
+               if (!Files.exists(var2, new LinkOption[0])) {
+                  System.out.println("A .tig repository does not exist!");
+                  return;
+               }
+
+               if (!Files.exists(var4, new LinkOption[0])) {
+                  System.out.println("File '" + var1 + "' does not exist!");
+                  return;
+               }
+
+               String var6 = calculateHash(var4);
+               Object var7 = new ArrayList();
+               if (Files.exists(var3, new LinkOption[0])) {
+                  var7 = Files.readAllLines(var3);
+               }
+
+               boolean var8 = false;
+
+               for(int var9 = 0; var9 < ((List)var7).size(); ++var9) {
+                  String[] var10 = ((String)((List)var7).get(var9)).split(",");
+                  if (var10[0].equals(var1)) {
+                     ((List)var7).set(var9, var1 + "," + var6);
+                     var8 = true;
+                     break;
+                  }
+               }
+
+               if (!var8) {
+                  ((List)var7).add(var1 + "," + var6);
+               }
+
+               Files.write(var3, (Iterable)var7);
+               System.out.println("Added '" + var1 + "' to staging area.");
+            } catch (IOException var11) {
+               System.out.println("Error adding file: " + var11.getMessage());
+            }
+
+         }
+      }
+   }
+
+   public static void commit(String[] var0) {
+      if (var0.length != 1) {
+         System.out.println("Usage: commit <message>");
+      } else {
+         String var1 = var0[0];
+         Path var2 = Paths.get(".tig");
+         Path var3 = var2.resolve("index");
+         Path var4 = var2.resolve("commits");
+
+         try {
+            if (!Files.exists(var2, new LinkOption[0])) {
+               System.out.println("A .tig repository does not exist!");
+               return;
+            }
+
+            if (!Files.exists(var4, new LinkOption[0])) {
+               Files.createDirectory(var4);
+            }
+
+            Object var5 = Files.exists(var3, new LinkOption[0]) ? Files.readAllLines(var3) : new ArrayList();
+            if (((List)var5).isEmpty()) {
+               System.out.println("No staged files to commit.");
+               return;
+            }
+
+            HashMap var6 = new HashMap();
+            Optional var7 = Files.list(var4).filter((var0x) -> {
+               return Files.isDirectory(var0x, new LinkOption[0]);
+            }).max(Comparator.comparing(Path::getFileName));
+            String var11;
+            if (var7.isPresent()) {
+               Path var8 = ((Path)var7.get()).resolve("manifest.csv");
+               if (Files.exists(var8, new LinkOption[0])) {
+                  List var9 = Files.readAllLines(var8);
+                  Iterator var10 = var9.subList(1, var9.size()).iterator();
+
+                  while(var10.hasNext()) {
+                     var11 = (String)var10.next();
+                     String[] var12 = var11.split(",");
+                     var6.put(var12[0], var12[1]);
+                  }
+               }
+            }
+
+            Set var23 = readTigIgnore();
+            Iterator var24 = var6.entrySet().iterator();
+
+            while(var24.hasNext()) {
+               Map.Entry var26 = (Map.Entry)var24.next();
+               var11 = (String)var26.getKey();
+               String var29 = (String)var26.getValue();
+               boolean var13 = ((List)var5).stream().anyMatch((var1x) -> {
+                  return var1x.startsWith(var11 + ",");
+               }) || var23.contains(var11);
+               if (!var13) {
+                  ((List)var5).add(var11 + "," + var29);
+               }
+            }
+
+            int var25 = (int)Files.list(var4).count() + 1;
+            String var27 = String.format("commit_%04d", var25);
+            Path var28 = var4.resolve(var27);
+            Files.createDirectory(var28);
+            Path var30 = var28.resolve("manifest.csv");
+            BufferedWriter var31 = Files.newBufferedWriter(var30);
+
+            try {
+               var31.write("filename,hash\n");
+               Iterator var14 = ((List)var5).iterator();
+
+               while(var14.hasNext()) {
+                  String var15 = (String)var14.next();
+                  var31.write(var15 + "\n");
+               }
+            } catch (Throwable var21) {
+               if (var31 != null) {
+                  try {
+                     var31.close();
+                  } catch (Throwable var19) {
+                     var21.addSuppressed(var19);
+                  }
+               }
+
+               throw var21;
+            }
+
+            if (var31 != null) {
+               var31.close();
+            }
+
+            Iterator var32 = ((List)var5).iterator();
+
+            while(var32.hasNext()) {
+               String var34 = (String)var32.next();
+               String[] var36 = var34.split(",");
+               Path var16 = Paths.get(var36[0]);
+               Path var17 = var28.resolve(var36[0]);
+               Files.createDirectories(var17.getParent());
+               Files.copy(var16, var17, StandardCopyOption.REPLACE_EXISTING);
+            }
+
+            Path var33 = var28.resolve("info.txt");
+            BufferedWriter var35 = Files.newBufferedWriter(var33);
+
+            try {
+               var35.write("Commit ID: " + var27 + "\n");
+               var35.write("Message: " + var1 + "\n");
+               var35.write("Date: " + Instant.now().toString() + "\n");
+            } catch (Throwable var20) {
+               if (var35 != null) {
+                  try {
+                     var35.close();
+                  } catch (Throwable var18) {
+                     var20.addSuppressed(var18);
+                  }
+               }
+
+               throw var20;
+            }
+
+            if (var35 != null) {
+               var35.close();
+            }
+
+            Files.delete(var3);
+            System.out.println("Committed with ID: " + var27);
+         } catch (IOException var22) {
+            System.out.println("Error committing changes: " + var22.getMessage());
+         }
+
+      }
+   }
+
+   public static void log(String[] var0) {
+      Path var1 = Paths.get(".tig");
+      Path var2 = var1.resolve("commits");
+
+      try {
+         if (!Files.exists(var1, new LinkOption[0])) {
+            System.out.println("No Tig repository!");
+            return;
+         }
+
+         if (!Files.exists(var2, new LinkOption[0])) {
+            System.out.println("No commits found!");
+            return;
+         }
+
+         List var3 = (List)Files.list(var2).filter((var0x) -> {
+            return Files.isDirectory(var0x, new LinkOption[0]);
+         }).sorted(Comparator.comparing((var0x) -> {
+            return var0x.getFileName().toString();
+         }).reversed()).collect(Collectors.toList());
+         Iterator var4 = var3.iterator();
+
+         while(var4.hasNext()) {
+            Path var5 = (Path)var4.next();
+            Path var6 = var5.resolve("info.txt");
+            if (Files.exists(var6, new LinkOption[0])) {
+               Stream var10000 = Files.lines(var6);
+               PrintStream var10001 = System.out;
+               Objects.requireNonNull(var10001);
+               var10000.forEach(var10001::println);
+               System.out.println("-----------------------------");
+            }
+         }
+      } catch (IOException var7) {
+         System.out.println("Error reading logs: " + var7.getMessage());
+      }
+
+   }
+
+   public static void status(String[] var0) {
+      Path var1 = Paths.get(".tig");
+      Path var2 = var1.resolve("index");
+      Path var3 = Paths.get(var1.toString(), "commits");
+      if (!Files.exists(var1, new LinkOption[0])) {
+         System.out.println("Not a Tig repository.");
+      } else {
+         try {
+            Optional var4 = Files.exists(var3, new LinkOption[0]) ? Files.list(var3).filter((var0x) -> {
+               return Files.isDirectory(var0x, new LinkOption[0]);
+            }).max(Comparator.comparing(Path::getFileName)) : Optional.empty();
+            HashMap var5 = new HashMap();
+            List var7;
+            if (var4.isPresent()) {
+               Path var6 = ((Path)var4.get()).resolve("manifest.csv");
+               if (Files.exists(var6, new LinkOption[0])) {
+                  var7 = Files.readAllLines(var6);
+                  Iterator var8 = var7.subList(1, var7.size()).iterator();
+
+                  while(var8.hasNext()) {
+                     String var9 = (String)var8.next();
+                     String[] var10 = var9.split(",");
+                     var5.put(var10[0], var10[1]);
+                  }
+               }
+            }
+
+            Set var18 = readTigIgnore();
+            var7 = (List)Files.list(Paths.get(".")).filter((var0x) -> {
+               return !var0x.getFileName().toString().startsWith(".");
+            }).filter((var1x) -> {
+               return !var18.contains(var1x.getFileName().toString());
+            }).collect(Collectors.toList());
+            Object var19 = Files.exists(var2, new LinkOption[0]) ? Files.readAllLines(var2) : new ArrayList();
+            Set var20 = (Set)((List)var19).stream().map((var0x) -> {
+               return var0x.split(",")[0];
+            }).collect(Collectors.toSet());
+            ArrayList var21 = new ArrayList();
+            ArrayList var11 = new ArrayList();
+            ArrayList var12 = new ArrayList(var5.keySet());
+            Iterator var13 = var7.iterator();
+
+            while(var13.hasNext()) {
+               Path var14 = (Path)var13.next();
+               String var15 = var14.getFileName().toString();
+               String var16 = calculateHash(var14);
+               if (var20.contains(var15)) {
+                  var12.remove(var15);
+               } else if (var5.containsKey(var15)) {
+                  if (!((String)var5.get(var15)).equals(var16)) {
+                     var11.add(var15);
+                     var12.remove(var15);
+                  }
+               } else {
+                  var21.add(var15);
+               }
+            }
+
+            System.out.println("Committed files:");
+            PrintStream var10001;
+            if (var12.isEmpty()) {
+               System.out.println("(none)");
+            } else {
+               var10001 = System.out;
+               Objects.requireNonNull(var10001);
+               var12.forEach(var10001::println);
+            }
+
+            System.out.println("\nStaged files:");
+            if (var20.isEmpty()) {
+               System.out.println("(none)");
+            } else {
+               var10001 = System.out;
+               Objects.requireNonNull(var10001);
+               var20.forEach(var10001::println);
+            }
+
+            System.out.println("\nModified files:");
+            if (var11.isEmpty()) {
+               System.out.println("(none)");
+            } else {
+               var10001 = System.out;
+               Objects.requireNonNull(var10001);
+               var11.forEach(var10001::println);
+            }
+
+            System.out.println("\nUntracked files:");
+            if (var21.isEmpty()) {
+               System.out.println("(none)");
+            } else {
+               var10001 = System.out;
+               Objects.requireNonNull(var10001);
+               var21.forEach(var10001::println);
+            }
+         } catch (IOException var17) {
+            System.out.println("Error checking status: " + var17.getMessage());
+         }
+
+      }
+   }
+
+   public static void diff(String[] var0) {
+      if (var0.length != 1) {
+         System.out.println("Usage: diff <filename>");
+      } else {
+         String var1 = var0[0];
+         Path var2 = Paths.get(".tig");
+         Path var3 = var2.resolve("commits");
+         Set var4 = readTigIgnore();
+         if (var4.contains(var1)) {
+            System.out.println("File '" + var1 + "' is ignored as per .tigignore.");
+         } else if (!Files.exists(var2, new LinkOption[0])) {
+            System.out.println("Not a Tig repository.");
+         } else {
+            try {
+               Optional var5 = Files.exists(var3, new LinkOption[0]) ? Files.list(var3).filter((var0x) -> {
+                  return Files.isDirectory(var0x, new LinkOption[0]);
+               }).max(Comparator.comparing(Path::getFileName)) : Optional.empty();
+               if (var5.isEmpty()) {
+                  System.out.println("No commits found for comparison.");
+                  return;
+               }
+
+               Path var6 = ((Path)var5.get()).resolve("manifest.csv");
+               if (!Files.exists(var6, new LinkOption[0])) {
+                  System.out.println("Manifest file is missing in the latest commit.");
+                  return;
+               }
+
+               HashMap var7 = new HashMap();
+               List var8 = Files.readAllLines(var6);
+               Iterator var9 = var8.subList(1, var8.size()).iterator();
+
+               while(var9.hasNext()) {
+                  String var10 = (String)var9.next();
+                  String[] var11 = var10.split(",");
+                  var7.put(var11[0], var11[1]);
+               }
+
+               if (!var7.containsKey(var1)) {
+                  System.out.println("File '" + var1 + "' was not committed in the latest commit.");
+                  return;
+               }
+
+               Path var18 = ((Path)var5.get()).resolve(var1);
+               if (!Files.exists(var18, new LinkOption[0])) {
+                  System.out.println("Committed file '" + var1 + "' is missing in the repository.");
+                  return;
+               }
+
+               List var19 = Files.readAllLines(var18);
+               Path var20 = Paths.get(var1);
+               if (!Files.exists(var20, new LinkOption[0])) {
+                  System.out.println("Working file '" + var1 + "' does not exist.");
+                  return;
+               }
+
+               List var12 = Files.readAllLines(var20);
+               System.out.println("Differences for file: " + var1);
+               System.out.println("---------------------------");
+               int var13 = Math.max(var19.size(), var12.size());
+
+               for(int var14 = 0; var14 < var13; ++var14) {
+                  String var15 = var14 < var19.size() ? (String)var19.get(var14) : null;
+                  String var16 = var14 < var12.size() ? (String)var12.get(var14) : null;
+                  if (Objects.equals(var15, var16)) {
+                     System.out.println("  " + (var15 != null ? var15 : ""));
+                  } else {
+                     if (var15 != null) {
+                        System.out.println("- " + var15);
+                     }
+
+                     if (var16 != null) {
+                        System.out.println("+ " + var16);
+                     }
+                  }
+               }
+            } catch (IOException var17) {
+               System.out.println("Error performing diff: " + var17.getMessage());
+            }
+
+         }
+      }
+   }
+
+   public static void checkout(String[] var0) {
+      if (var0.length != 1) {
+         System.out.println("Usage: checkout <commit_id>");
+      } else {
+         String var1 = var0[0];
+         Path var2 = Paths.get(".tig");
+         Path var3 = var2.resolve("commits");
+         Path var4 = var3.resolve(var1);
+         if (!Files.exists(var2, new LinkOption[0])) {
+            System.out.println("Not a Tig repository!");
+         } else if (!Files.exists(var4, new LinkOption[0])) {
+            System.out.println("Commit '" + var1 + "' does not exist!");
+         } else {
+            Path var5 = var4.resolve("manifest.csv");
+            if (!Files.exists(var5, new LinkOption[0])) {
+               System.out.println("Manifest file for commit '" + var1 + "' is missing!");
+            } else {
+               try {
+                  HashMap var6 = new HashMap();
+                  List var7 = Files.readAllLines(var5);
+                  Iterator var8 = var7.subList(1, var7.size()).iterator();
+
+                  while(var8.hasNext()) {
+                     String var9 = (String)var8.next();
+                     String[] var10 = var9.split(",");
+                     var6.put(var10[0], var10[1]);
+                  }
+
+                  Files.list(Paths.get(".")).filter((var0x) -> {
+                     return !var0x.getFileName().toString().startsWith(".tig");
+                  }).forEach((var0x) -> {
+                     try {
+                        if (Files.isDirectory(var0x, new LinkOption[0])) {
+                           Files.walk(var0x).sorted(Comparator.reverseOrder()).forEach((var0) -> {
+                              try {
+                                 Files.delete(var0);
+                              } catch (IOException var2) {
+                                 PrintStream var10000 = System.out;
+                                 String var10001 = String.valueOf(var0);
+                                 var10000.println("Error deleting " + var10001 + ": " + var2.getMessage());
+                              }
+
+                           });
+                        } else {
+                           Files.delete(var0x);
+                        }
+                     } catch (IOException var2) {
+                        System.out.println("Error cleaning up working directory: " + var2.getMessage());
+                     }
+
+                  });
+                  Set var14 = readTigIgnore();
+                  Iterator var15 = var6.entrySet().iterator();
+
+                  while(var15.hasNext()) {
+                     Map.Entry var16 = (Map.Entry)var15.next();
+                     if (!var14.contains(var16.getKey())) {
+                        Path var11 = var4.resolve((String)var16.getKey());
+                        Path var12 = Paths.get((String)var16.getKey());
+                        if (var12.getParent() != null) {
+                           Files.createDirectories(var12.getParent());
+                        }
+
+                        Files.copy(var11, var12, StandardCopyOption.REPLACE_EXISTING);
+                     }
+                  }
+
+                  System.out.println("Checked out to commit '" + var1 + "'.");
+               } catch (IOException var13) {
+                  System.out.println("Error during checkout: " + var13.getMessage());
+               }
+
+            }
+         }
+      }
+   }
+
+   public static void main(String[] var0) {
+      if (var0.length < 1) {
+         System.out.println("Usage: java Tig <command> [arguments]");
+      } else {
+         String var1 = var0[0];
+         String[] var2 = (String[])Arrays.copyOfRange(var0, 1, var0.length);
+         HashMap var3 = new HashMap();
+         var3.put("init", Tig::init);
+         var3.put("add", Tig::addFile);
+         var3.put("commit", Tig::commit);
+         var3.put("log", Tig::log);
+         var3.put("status", Tig::status);
+         var3.put("checkout", Tig::checkout);
+         var3.put("diff", Tig::diff);
+         if (var3.containsKey(var1)) {
+            ((Consumer)var3.get(var1)).accept(var2);
+         } else {
+            System.out.println("Unknown command: " + var1);
+         }
+
+      }
+   }
+}
