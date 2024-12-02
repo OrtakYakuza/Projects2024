@@ -25,7 +25,13 @@ for the diff function we used the library method which we had to looked up on th
 check out restores the repository's state to a specified commit by retrieving the commit's manifest, cleaning the current working directory + copying the files associated with the commit from the .tig/commits directory
 
 27.11.24
-after we implemented all functions we merged each branch into main and tested through all the steps. There were still some problems so we updated and debugged the functions until everything works. More specifically we had to change the status and commit functio we came to this realization when our checkout function was not giving the correct output
+after we implemented all functions we merged each branch into main and tested through all the steps. There were still some problems so we updated and debugged the functions until everything works. More specifically we had to change the status and commit function we came to this realization when our checkout function was not giving the correct output with other_file.txt being preceived as untracked when the status function was called.
+
+status was improved to not ambigously handle the different files through defining the different states more clearly and fetches them correctly.
+commit was improved through the get_next_commit_id() which now works correctly and it now also clears the index properly.
+
+with that our python implementation of Tig worked as wanted which is demonstraed with our output below!
+
 
 STEP1 output of the commands:
 
@@ -122,6 +128,7 @@ Committed files:
   other_file.txt
 
 
+
 29.11.24
 
 As we have officially finished Step1 we move on to Step2!
@@ -129,20 +136,32 @@ reviewed lecture with java file archiver
 implemented file archiver in our tig.py within our tig class as java is object oriented
 with this we offical start with step2!
 
-30.11.24 - 03.12.24
+30.11.24 - 02.12.24
 
-as a first step we devided the function among us and rewrote them in java on seperate branches here we used chatgpt as help to figure out certain functionalities
-we then merged them all together into our main 
+as a first step we devided the function among us and rewrote them in java on seperate branches here we used chatgpt as help to figure out certain functionalities of java
 
-when we first ran the code then we quickly came to the realization that our code was not working and was showing errors and faults which made it impossible. The main issue was that the file was inconsistent and incomplete handling of file paths, variables (like directory and TIG_DIR), and static methods.
+as it is our first time really working with java we ran into some difficulties when writing our functions 
+the difficulty lies in its static nature, it is very different from pythons dynamic one and needs time to get used to
+also we do not know all of the mechanisms and operations of java where we got help from AI (chatgpt)
+
+seperated functions to certain commands like get_latest_commit_files() for status or get_next_commit_id() commit we were not able to implement in java the same way as in python instead we opted to implement the logic within the commands
+
+after we finished individual branches, we merged them all together into our main 
+
+when we then ran+compiled the code then we quickly came to the realization that our code was not working and was showing errors and faults which made it impossible to run. The main issue was that the file was inconsistent and the incomplete handling of file paths, variables (like directory and TIG_DIR), and static methods.
 
 we continued by debugging our faulty file and to make it work like it should for this we first removed the redunant part of the file archiver which were unecessary to our code 
 
-the second part was fixing the faults which were leading our code not to run which were the ones metioned above
+the second part was fixing the faults and erros which were leading our code not to run which were the ones metioned above
 
-after the code was now able to run we tried running the commands we here quickly realized that our status function was not giving the correct output. here we had to debug for quite a while to make status give the correct output and also had to modify commit as they status for the commited files was not showing up correct.
+after the code was now able to run we tried running the commands we here quickly realized that our status function was not giving the correct output. here we had to debug for quite a while to make status give the correct output and also had to modify commit as the status for the commited files was not showing up correctly
 
-in general we had difficulty with writing java code because of its static nature, it is very different from pythons dynamic one 
+after all this debugging we were able to run and compile our java file and the commands also started giving the correct output 
+
+lastly we added .tigignore support in every function as per task description
+
+running and compiling the code worked now without any problems and the output is as expected as demonstrated below
+
 
 STEP2 output of the commands:
 
