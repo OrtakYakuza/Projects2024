@@ -136,7 +136,13 @@ we then merged them all together into our main
 
 when we first ran the code then we quickly came to the realization that our code was not working and was showing errors and faults which made it impossible. The main issue was that the file was inconsistent and incomplete handling of file paths, variables (like directory and TIG_DIR), and static methods.
 
-we continued by debugging our faulty file and to make it work like it should
+we continued by debugging our faulty file and to make it work like it should for this we first removed the redunant part of the file archiver which were unecessary to our code 
+
+the second part was fixing the faults which were leading our code not to run which were the ones metioned above
+
+after the code was now able to run we tried running the commands we here quickly realized that our status function was not giving the correct output. here we had to debug for quite a while to make status give the correct output and also had to modify commit as they status for the commited files was not showing up correct.
+
+in general we had difficulty with writing java code because of its static nature, it is very different from pythons dynamic one 
 
 STEP2 output of the commands:
 
