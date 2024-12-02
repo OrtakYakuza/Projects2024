@@ -140,8 +140,8 @@ we continued by debugging our faulty file and to make it work like it should
 
 STEP2 output of the commands:
 
-1. mkdir repo
-java Tig.java init repo
+1. mkdir repo_java
+java Tig.java init repo_java
 
 our output:
 Initialized empty Tig 
