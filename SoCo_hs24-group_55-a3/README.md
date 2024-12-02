@@ -156,6 +156,8 @@ the second part was fixing the faults and erros which were leading our code not 
 
 after the code was now able to run we tried running the commands we here quickly realized that our status function was not giving the correct output. here we had to debug for quite a while to make status give the correct output and also had to modify commit as the status for the commited files was not showing up correctly
 
+additionally we tried to implement the diff funtion just like in python by importing a library and then working with that.this did not work for us so we opted for a different way by implementing comparing files in the current working directory with its last committed version and showing line-by-line differences within the command itself
+
 after all this debugging we were able to run and compile our java file and the commands also started giving the correct output 
 
 lastly we added .tigignore support in every function as per task description
