@@ -558,8 +558,8 @@ public class Tig {
 
         // restore committed files
         for (Map.Entry<String, String> entry : committedFiles.entrySet()) {
-            Path sourcePath = commitFolder.resolve(entry.getKey()); // Path to the committed file
-            Path destPath = Paths.get(entry.getKey()); // Path to restore the file in the working directory
+            Path sourcePath = commitFolder.resolve(entry.getKey()); 
+            Path destPath = Paths.get(entry.getKey()); 
 
         
             if (destPath.getParent() != null) {
