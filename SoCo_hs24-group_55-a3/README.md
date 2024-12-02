@@ -127,7 +127,141 @@ Committed files:
 As we have officially finished Step1 we move on to Step2!
 reviewed lecture with java file archiver
 implemented file archiver in our tig.py within our tig class as java is object oriented
+with this we offical start with step2!
 
 30.11.24
 
-implemeneted the init function in java as this was the first actualy function implementation there was some difficulty invloved as we had to figure out the Path Class from Java which handles things differently from the pathlib module in python 
+as a first step we devided the function among us and rewrote them in java on seperate branches here we used chatgpt as help to figure out certain functionalities
+we then merged them all together into our main 
+
+when we first ran the code then we quickly came to the realization that our code was not working and was showing errors and faults which made it impossible. The main issue was that the file was inconsistent and incomplete handling of file paths, variables (like directory and TIG_DIR), and static methods.
+
+we continued by debugging our faulty file and to make it work like it should
+
+STEP2 output of the commands:
+
+1. mkdir repo
+java Tig.java init repo
+
+our output:
+Initialized empty Tig 
+
+2. cd repo
+echo "Initial content" > file.txt
+echo "Initial content of the other file" > other_file.txt
+java ../Tig status
+
+our output:
+Committed files:
+(none)
+
+Staged files:
+(none)
+
+Modified files:
+(none)
+
+Untracked files:
+file.txt
+other_file.txt
+
+3. java ../Tig add file.txt
+java ../Tig add other_file.txt
+java ../Tig status
+
+our output:
+Added 'file.txt' to staging area.
+Added 'other_file.txt' to staging area.
+Committed files:
+(none)
+
+Staged files:
+file.txt
+other_file.txt
+
+Modified files:
+(none)
+
+Untracked files:
+(none)
+
+4.  java ../Tig commit "Initial commit"
+java ../Tig status
+
+our output:
+"Initial commit"
+Committed with ID: commit_0001
+Committed files:
+file.txt
+other_file.txt
+
+Staged files:
+(none)
+
+Modified files:
+(none)
+
+Untracked files:
+(none)
+
+5. echo "Updated content" >> file.txt
+java ../Tig status
+
+our output:
+Committed files:
+other_file.txt
+
+Staged files:
+(none)
+
+Modified files:
+file.txt
+
+Untracked files:
+(none)
+
+6. java ../Tig diff file.txt
+
+our output:
+Differences for file: file.txt
+---------------------------
+  Initial content
++ Updated content
+
+7. java ../Tig add file.txt
+java ../Tig commit "Updated content in file.txt"
+
+our output:
+"Updated content in file.txt"
+Committed with ID: commit_0002
+
+
+8. java ../Tig log
+java ../Tig checkout commit_0001
+
+our output:
+Commit ID: commit_0002
+Message: Updated content in file.txt
+Date: 2024-12-02T16:24:59.557345Z
+-----------------------------
+Commit ID: commit_0001
+Message: Initial commit
+Date: 2024-12-02T16:23:46.867794Z
+-----------------------------
+
+9. java ../Tig status
+
+our output:
+Committed files:
+other_file.txt
+
+Staged files:
+(none)
+
+Modified files:
+file.txt
+
+Untracked files:
+(none)
+
+
