@@ -14,8 +14,19 @@ public class Tig {
 
     public static record FileEntry(String filename, String hash) {} // this is to to encapsulate information about a file
     
-
-
+    private static Set<String> readTigIgnore() {
+    Path tigIgnorePath = Paths.get(TIG_DIR, ".tigignore");
+    Set<String> ignoredFiles = new HashSet<>();
+    if (Files.exists(tigIgnorePath)) {
+        try {
+            List<String> lines = Files.readAllLines(tigIgnorePath);
+            ignoredFiles.addAll(lines.stream().map(String::trim).filter(line -> !line.isEmpty()).collect(Collectors.toSet()));
+        } catch (IOException e) {
+            System.out.println("Error reading .tigignore: " + e.getMessage());
+        }
+    }
+    return ignoredFiles;
+    }
 
     public static String calculateHash(Path file) {
         try {
@@ -90,6 +101,13 @@ public class Tig {
     // path to index file 
     Path indexPath = tigPath.resolve("index");
     Path filepath = Paths.get(filename);
+
+    Set<String> ignoredFiles = readTigIgnore();
+    if (ignoredFiles.contains(filename)) {
+    System.out.println("File '" + filename + "' is ignored as per .tigignore.");
+    return;
+    }
+
 
 
     // defensive coding
@@ -192,12 +210,14 @@ public class Tig {
             }
         }
 
+        Set<String> ignoredFiles = readTigIgnore();
+
         // add files from previous commit 
         for (Map.Entry<String, String> entry : previousCommittedFiles.entrySet()) {
             String filename = entry.getKey();
             String hash = entry.getValue();
             boolean alreadyStaged = stagedFiles.stream()
-                .anyMatch(s -> s.startsWith(filename + ","));
+                .anyMatch(s -> s.startsWith(filename + ",")) || ignoredFiles.contains(filename);
             if (!alreadyStaged) {
                 stagedFiles.add(filename + "," + hash);
             }
@@ -290,24 +310,22 @@ public class Tig {
     Path indexPath = tigDir.resolve("index");
     Path commitsDir = Paths.get(tigDir.toString(), "commits");
 
-    
     if (!Files.exists(tigDir)) {
         System.out.println("Not a Tig repository.");
         return; 
     }
 
     try {
-        // latest commit folder
+        //latest commit folder
         Optional<Path> latestCommit = Files.exists(commitsDir) ?
             Files.list(commitsDir) 
-                .filter(Files::isDirectory) // filter
+                .filter(Files::isDirectory) 
                 .max(Comparator.comparing(Path::getFileName)) : 
-            Optional.empty(); // 
+            Optional.empty(); 
 
-        // map to store the committed files and their hashes
+        //map to store committed files and their hashes
         Map<String, String> committedFiles = new HashMap<>();
         if (latestCommit.isPresent()) {
-            // read manifest file
             Path manifestPath = latestCommit.get().resolve("manifest.csv");
             if (Files.exists(manifestPath)) {
                 List<String> lines = Files.readAllLines(manifestPath);
@@ -318,43 +336,47 @@ public class Tig {
             }
         }
 
-        // list all files 
+        //read .tigignore file
+        Set<String> ignoredFiles = readTigIgnore();
+
+        //list all files in working directory
         List<Path> workingFiles = Files.list(Paths.get("."))
             .filter(file -> !file.getFileName().toString().startsWith(".")) 
+            .filter(file -> !ignoredFiles.contains(file.getFileName().toString()))
             .collect(Collectors.toList());
 
-        // read index filefor staged files
+        //read index file for staged files
         List<String> indexEntries = Files.exists(indexPath) ? Files.readAllLines(indexPath) : new ArrayList<>();
         Set<String> stagedFiles = indexEntries.stream()
-            .map(entry -> entry.split(",")[0]) // filename from entry
+            .map(entry -> entry.split(",")[0])
             .collect(Collectors.toSet());
 
-        // lists to track,untracked, modified,committed 
+        // Lists to track untracked, modified, and committed files
         List<String> untrackedFiles = new ArrayList<>();
         List<String> modifiedFiles = new ArrayList<>();
         List<String> committedFileNames = new ArrayList<>(committedFiles.keySet());
 
-        // compare working directory files 
+        // Compare working directory files
         for (Path workingFile : workingFiles) {
             String fileName = workingFile.getFileName().toString(); 
             String currentHash = calculateHash(workingFile); 
 
             if (stagedFiles.contains(fileName)) {
-                // ifstaged remove from the committed files list
+                // If staged, remove from the committed files list
                 committedFileNames.remove(fileName);
             } else if (committedFiles.containsKey(fileName)) {
-                // if committed, checking if has been modified
+                // If committed, check if it has been modified
                 if (!committedFiles.get(fileName).equals(currentHash)) {
                     modifiedFiles.add(fileName); 
-                    committedFileNames.remove(fileName); // remove
+                    committedFileNames.remove(fileName); 
                 }
             } else {
-                // add it to untracked files if none of above
+                // Add it to untracked files if none of the above
                 untrackedFiles.add(fileName);
             }
         }
 
-        
+        //print committed files
         System.out.println("Committed files:");
         if (committedFileNames.isEmpty()) {
             System.out.println("(none)");
@@ -362,6 +384,7 @@ public class Tig {
             committedFileNames.forEach(System.out::println);
         }
 
+        //print staged files
         System.out.println("\nStaged files:");
         if (stagedFiles.isEmpty()) {
             System.out.println("(none)");
@@ -369,7 +392,7 @@ public class Tig {
             stagedFiles.forEach(System.out::println);
         }
 
-        
+        //print modified files
         System.out.println("\nModified files:");
         if (modifiedFiles.isEmpty()) {
             System.out.println("(none)");
@@ -377,7 +400,7 @@ public class Tig {
             modifiedFiles.forEach(System.out::println);
         }
 
-        
+        //print untracked files
         System.out.println("\nUntracked files:");
         if (untrackedFiles.isEmpty()) {
             System.out.println("(none)");
@@ -387,9 +410,9 @@ public class Tig {
 
     } catch (IOException e) {
         System.out.println("Error checking status: " + e.getMessage());
-        
     }
 }
+
 
     public static void diff(String[] args) {
     if (args.length != 1) {
@@ -401,6 +424,12 @@ public class Tig {
     String filename = args[0];
     Path tigDir = Paths.get(TIG_DIR);
     Path commitsDir = tigDir.resolve("commits");
+    Set<String> ignoredFiles = readTigIgnore();
+    if (ignoredFiles.contains(filename)) {
+        System.out.println("File '" + filename + "' is ignored as per .tigignore.");
+        return;
+    }
+
 
    
     if (!Files.exists(tigDir)) {
@@ -430,10 +459,10 @@ public class Tig {
 
         
         Map<String, String> committedFiles = new HashMap<>();
-        List<String> manifestLines = Files.readAllLines(manifestPath); // read the manifest file 
+        List<String> manifestLines = Files.readAllLines(manifestPath); 
         for (String line : manifestLines.subList(1, manifestLines.size())) { 
-            String[] parts = line.split(","); // split line to extract info
-            committedFiles.put(parts[0], parts[1]); // store the filename and hash in map
+            String[] parts = line.split(","); 
+            committedFiles.put(parts[0], parts[1]); 
         }
 
     
@@ -460,11 +489,11 @@ public class Tig {
         
         List<String> workingContent = Files.readAllLines(workingFilePath);
 
-        // header for the differences
+        
         System.out.println("Differences for file: " + filename);
         System.out.println("---------------------------");
 
-        // line-by-line comparison of the two versions
+        
         int maxLines = Math.max(committedContent.size(), workingContent.size());
         for (int i = 0; i < maxLines; i++) {
             String committedLine = i < committedContent.size() ? committedContent.get(i) : null;
@@ -552,10 +581,14 @@ public class Tig {
                 }
             });
 
+        Set<String> ignoredFiles = readTigIgnore();
+
         // restore committed files
         for (Map.Entry<String, String> entry : committedFiles.entrySet()) {
-            Path sourcePath = commitFolder.resolve(entry.getKey()); 
-            Path destPath = Paths.get(entry.getKey()); 
+            if (ignoredFiles.contains(entry.getKey())) continue;
+            Path sourcePath = commitFolder.resolve(entry.getKey());
+            Path destPath = Paths.get(entry.getKey());
+        
 
         
             if (destPath.getParent() != null) {
