@@ -129,7 +129,7 @@ reviewed lecture with java file archiver
 implemented file archiver in our tig.py within our tig class as java is object oriented
 with this we offical start with step2!
 
-30.11.24
+30.11.24 - 03.12.24
 
 as a first step we devided the function among us and rewrote them in java on seperate branches here we used chatgpt as help to figure out certain functionalities
 we then merged them all together into our main 
