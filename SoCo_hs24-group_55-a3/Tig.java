@@ -57,15 +57,13 @@ public class Tig {
         // defensive coding
         if (!Files.exists(dirPath)) {
             System.out.println("The directory '" + directory + "' does not exist!");
-            // Notify the user that the directory does not exist
-            return; // Exit the method
+            return; 
         }
 
         // defensive coding
         if (Files.exists(tigDir)) {
             System.out.println("A .tig repository already exists in '" + directory + "'!");
-            // Notify the user that a repository is already initialized
-            return; // Exit the method
+            return; 
         }
 
         // creats the '.tig' directory 
@@ -201,7 +199,6 @@ public class Tig {
             boolean alreadyStaged = stagedFiles.stream()
                 .anyMatch(s -> s.startsWith(filename + ","));
             if (!alreadyStaged) {
-                // If not staged, add it to the staged files list
                 stagedFiles.add(filename + "," + hash);
             }
         }
@@ -225,10 +222,10 @@ public class Tig {
         // copy file into folder
         for (String entry : stagedFiles) {
             String[] parts = entry.split(",");
-            Path sourcePath = Paths.get(parts[0]); // Path to the original file
-            Path destPath = commitFolder.resolve(parts[0]); // Destination path in the commit folder
-            Files.createDirectories(destPath.getParent()); // Ensure parent directories exist
-            Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING); // Copy the file
+            Path sourcePath = Paths.get(parts[0]); 
+            Path destPath = commitFolder.resolve(parts[0]); 
+            Files.createDirectories(destPath.getParent()); 
+            Files.copy(sourcePath, destPath, StandardCopyOption.REPLACE_EXISTING); 
         }
 
         // write info.txt file
@@ -323,7 +320,7 @@ public class Tig {
 
         // list all files 
         List<Path> workingFiles = Files.list(Paths.get("."))
-            .filter(file -> !file.getFileName().toString().startsWith(".")) // Exclude hidden files
+            .filter(file -> !file.getFileName().toString().startsWith(".")) 
             .collect(Collectors.toList());
 
         // read index filefor staged files
@@ -442,8 +439,7 @@ public class Tig {
     
         if (!committedFiles.containsKey(filename)) {
             System.out.println("File '" + filename + "' was not committed in the latest commit.");
-            // Inform the user if the file is not found in the latest commit
-            return; // Exit the method
+            return; 
         }
 
 
@@ -452,14 +448,14 @@ public class Tig {
             System.out.println("Committed file '" + filename + "' is missing in the repository.");
             return; 
         }
-        // Read content 
+        
         List<String> committedContent = Files.readAllLines(committedFilePath);
 
         // current version 
         Path workingFilePath = Paths.get(filename);
         if (!Files.exists(workingFilePath)) {
             System.out.println("Working file '" + filename + "' does not exist.");
-            return; // Exit the method
+            return; 
         }
         
         List<String> workingContent = Files.readAllLines(workingFilePath);
