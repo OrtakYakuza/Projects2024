@@ -1,6 +1,3 @@
-# SoCo-hs24-group-55-a1
-
-
 
 ## Getting started
 
